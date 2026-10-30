@@ -1,0 +1,495 @@
+/* ========================================================
+   EduFlow School Dashboard - Professional Design System
+   Mirrors teacher-portal-enhanced.css layout patterns
+   ======================================================== */
+
+/* --- CSS Custom Properties --- */
+:root {
+    --school-brand: #10b981;
+    --school-brand-dark: #059669;
+    --school-brand-light: #34d399;
+    --school-brand-50: #ecfdf5;
+    --school-brand-100: #d1fae5;
+    --school-brand-200: #a7f3d0;
+    --school-brand-500: #10b981;
+    --school-brand-600: #059669;
+    --school-brand-700: #047857;
+    --school-sidebar-width: 260px;
+    --school-sidebar-collapsed: 72px;
+    --school-header-height: 70px;
+}
+
+/* ========== SCHOOL PORTAL LAYOUT ========== */
+.school-portal-container { display: flex; min-height: 100vh; background: var(--bg-primary, #f0f4f8); }
+
+/* --- Sidebar --- */
+.school-portal-sidebar {
+    width: var(--school-sidebar-width);
+    background: white;
+    border-left: 1px solid var(--gray-200, #e5e7eb);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 200;
+    transition: all .25s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+
+.school-sidebar-header {
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--gray-100, #f3f4f6);
+}
+
+.school-sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--school-brand-600);
+}
+
+.school-sidebar-logo i { font-size: 1.5rem; }
+
+.school-sidebar-toggle {
+    display: none;
+    font-size: 1.2rem;
+    color: var(--gray-500, #6b7280);
+    padding: .5rem;
+    border-radius: .5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+.school-sidebar-toggle:hover { background: var(--gray-100, #f3f4f6); }
+
+.school-sidebar-nav {
+    flex: 1;
+    padding: 1rem .75rem;
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    overflow-y: auto;
+}
+
+.school-nav-item {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .75rem 1rem;
+    border-radius: .75rem;
+    font-size: .95rem;
+    font-weight: 600;
+    color: var(--gray-600, #4b5563);
+    transition: all .25s cubic-bezier(.4,0,.2,1);
+    width: 100%;
+    text-align: right;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.school-nav-item i { width: 20px; text-align: center; font-size: 1.1rem; }
+.school-nav-item:hover { background: var(--school-brand-50); color: var(--school-brand-600); }
+.school-nav-item.active {
+    background: linear-gradient(135deg, var(--school-brand-500), var(--school-brand-600));
+    color: white;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, .25);
+}
+
+.school-sidebar-footer {
+    padding: 1rem .75rem;
+    border-top: 1px solid var(--gray-100, #f3f4f6);
+}
+
+.school-btn-logout {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .75rem 1rem;
+    border-radius: .75rem;
+    font-size: .95rem;
+    font-weight: 600;
+    color: #dc2626;
+    width: 100%;
+    transition: all .25s cubic-bezier(.4,0,.2,1);
+    text-align: right;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+.school-btn-logout:hover { background: #fef2f2; }
+
+/* --- Main Content --- */
+.school-portal-main {
+    margin-right: var(--school-sidebar-width);
+    flex: 1;
+    min-height: 100vh;
+    transition: all .25s cubic-bezier(.4,0,.2,1);
+}
+
+.school-portal-header {
+    height: var(--school-header-height);
+    background: white;
+    border-bottom: 1px solid var(--gray-200, #e5e7eb);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+
+.school-header-right { display: flex; align-items: center; gap: 1rem; }
+.school-mobile-menu-btn {
+    display: none;
+    font-size: 1.3rem;
+    color: var(--gray-600, #4b5563);
+    padding: .5rem;
+    border-radius: .5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+.school-header-greeting h2 { font-size: 1.2rem; font-weight: 700; color: #111827; margin: 0; }
+.school-header-greeting p { font-size: .82rem; color: #9ca3af; margin: 0; }
+
+.school-header-left { display: flex; align-items: center; gap: 1rem; }
+.school-academic-badge {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .5rem 1rem;
+    border-radius: .75rem;
+    background: var(--school-brand-50);
+    color: var(--school-brand-700);
+    font-size: .85rem;
+    font-weight: 600;
+    border: 1px solid var(--school-brand-200);
+}
+
+.school-portal-content { padding: 1.5rem 2rem 2rem; }
+
+/* --- School Tab System --- */
+.school-tab-content { display: none; animation: schoolFadeIn .3s ease; }
+.school-tab-content.active { display: block; }
+@keyframes schoolFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ========== SCHOOL STATS CARDS ========== */
+.school-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.school-stat-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    transition: all .25s cubic-bezier(.4,0,.2,1);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--gray-100, #f3f4f6);
+    cursor: pointer;
+}
+
+.school-stat-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,.08); }
+.school-stat-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+}
+
+.school-stat-students::after { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+.school-stat-teachers::after { background: linear-gradient(90deg, #a855f7, #9333ea); }
+.school-stat-grades::after { background: linear-gradient(90deg, #f59e0b, #d97706); }
+.school-stat-performance::after { background: linear-gradient(90deg, #10b981, #059669); }
+.school-stat-attendance::after { background: linear-gradient(90deg, #06b6d4, #0891b2); }
+.school-stat-pass::after { background: linear-gradient(90deg, #22c55e, #16a34a); }
+
+.school-stat-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: .75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.school-stat-students .school-stat-icon { background: #eff6ff; color: #2563eb; }
+.school-stat-teachers .school-stat-icon { background: #faf5ff; color: #9333ea; }
+.school-stat-grades .school-stat-icon { background: #fffbeb; color: #d97706; }
+.school-stat-performance .school-stat-icon { background: #ecfdf5; color: #059669; }
+.school-stat-attendance .school-stat-icon { background: #ecfeff; color: #0891b2; }
+.school-stat-pass .school-stat-icon { background: #f0fdf4; color: #16a34a; }
+
+.school-stat-body { flex: 1; min-width: 0; }
+.school-stat-value { font-size: 1.75rem; font-weight: 800; color: #111827; line-height: 1.2; }
+.school-stat-label { font-size: .82rem; color: #9ca3af; font-weight: 500; }
+.school-stat-trend { color: #d1d5db; font-size: 1.5rem; }
+
+/* ========== SCHOOL SECTION CARDS ========== */
+.school-section-card {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    border: 1px solid var(--gray-100, #f3f4f6);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.school-card-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--gray-100, #f3f4f6);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .75rem;
+}
+
+.school-card-header h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #111827;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin: 0;
+}
+
+.school-card-header h3 i { color: var(--school-brand-500); }
+
+.school-card-body { padding: 1.5rem; }
+
+.school-card-header-actions {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+}
+
+/* ========== SCHOOL ACTION BUTTONS ========== */
+.school-btn-primary {
+    padding: .55rem 1.25rem;
+    border-radius: .75rem;
+    font-size: .85rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--school-brand-500), var(--school-brand-600));
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    transition: all .25s cubic-bezier(.4,0,.2,1);
+    min-height: 38px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.school-btn-primary:hover {
+    box-shadow: 0 4px 12px rgba(16, 185, 129, .3);
+    transform: translateY(-1px);
+}
+
+.school-btn-secondary {
+    padding: .55rem 1.25rem;
+    border-radius: .75rem;
+    font-size: .85rem;
+    font-weight: 600;
+    background: var(--gray-50, #f9fafb);
+    color: var(--gray-700, #374151);
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    transition: all .25s cubic-bezier(.4,0,.2,1);
+    min-height: 38px;
+    border: 1px solid var(--gray-200, #e5e7eb);
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.school-btn-secondary:hover { background: var(--gray-100, #f3f4f6); }
+
+/* ========== PERFORMANCE DISTRIBUTION ========== */
+.school-perf-dist {
+    margin-top: 1rem;
+}
+
+.school-perf-row {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .5rem 0;
+}
+
+.school-perf-label {
+    width: 80px;
+    font-size: .85rem;
+    font-weight: 600;
+    color: #374151;
+    text-align: right;
+}
+
+.school-perf-track {
+    flex: 1;
+    height: 10px;
+    background: #f3f4f6;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.school-perf-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width .6s ease;
+}
+
+.school-perf-fill.excellent { background: linear-gradient(90deg, #10b981, #059669); }
+.school-perf-fill.very-good { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+.school-perf-fill.good { background: linear-gradient(90deg, #22c55e, #16a34a); }
+.school-perf-fill.satisfactory { background: linear-gradient(90deg, #f59e0b, #d97706); }
+.school-perf-fill.needs-support { background: linear-gradient(90deg, #f97316, #ea580c); }
+.school-perf-fill.critical { background: linear-gradient(90deg, #ef4444, #dc2626); }
+
+.school-perf-count {
+    width: 30px;
+    font-size: .85rem;
+    font-weight: 700;
+    color: #374151;
+    text-align: center;
+}
+
+.school-perf-pct {
+    width: 40px;
+    font-size: .82rem;
+    color: #6b7280;
+    text-align: left;
+}
+
+/* ========== EXPORT CARDS ========== */
+.school-exports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.school-export-card {
+    background: var(--gray-50, #f9fafb);
+    border: 1px solid var(--gray-200, #e5e7eb);
+    border-radius: .75rem;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all .25s ease;
+    cursor: pointer;
+}
+
+.school-export-card:hover {
+    border-color: var(--school-brand-200);
+    background: var(--school-brand-50);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,.07);
+}
+
+.school-export-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: .5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.school-export-excel .school-export-icon { background: #dcfce7; color: #15803d; }
+.school-export-grade .school-export-icon { background: #fef3c7; color: #b45309; }
+
+.school-export-info { flex: 1; min-width: 0; }
+.school-export-info h4 { font-size: .95rem; font-weight: 700; color: #111827; margin: 0 0 .15rem; }
+.school-export-info p { font-size: .78rem; color: #9ca3af; margin: 0; }
+
+.school-export-arrow { color: #d1d5db; font-size: 1rem; }
+
+/* ========== GRADE LEVELS GRID ========== */
+.school-grades-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+/* ========== PLACEHOLDER/EMPTY STATES ========== */
+.school-empty-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #9ca3af;
+}
+
+.school-empty-state i { font-size: 3rem; margin-bottom: 1rem; color: #d1d5db; }
+.school-empty-state h3 { color: #4b5563; margin-bottom: .5rem; font-size: 1.1rem; }
+.school-empty-state p { font-size: .9rem; max-width: 400px; margin: 0 auto; }
+
+/* ========== SIDEBAR OVERLAY (mobile) ========== */
+.school-sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.4);
+    z-index: 199;
+}
+.school-sidebar-overlay.visible { display: block; }
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+    .school-stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+    .school-portal-sidebar {
+        transform: translateX(100%);
+        width: 280px;
+        box-shadow: 0 20px 25px -5px rgba(0,0,0,.08);
+    }
+    .school-portal-sidebar.open { transform: translateX(0); }
+    .school-portal-main { margin-right: 0; }
+    .school-mobile-menu-btn { display: flex; }
+    .school-portal-header { padding: 0 1rem; }
+    .school-portal-content { padding: 1rem; }
+    .school-stats-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .school-stat-card { padding: 1rem; }
+    .school-stat-value { font-size: 1.4rem; }
+    .school-sidebar-toggle { display: flex; }
+    .school-card-header { padding: 1rem; }
+    .school-card-body { padding: 1rem; }
+    .school-exports-grid { grid-template-columns: 1fr; }
+    .school-academic-badge span { display: none; }
+}
+
+@media (max-width: 480px) {
+    .school-stats-grid { grid-template-columns: 1fr; }
+    .school-stat-card { padding: .85rem; }
+    .school-card-header-actions { flex-direction: column; width: 100%; }
+    .school-card-header-actions .school-btn-primary,
+    .school-card-header-actions .school-btn-secondary { width: 100%; justify-content: center; }
+}
