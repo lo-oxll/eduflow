@@ -1,0 +1,2351 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الطالب - EduFlow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/unified-design-system.css">
+    <link rel="stylesheet" href="assets/css/unified-components.css">
+    <link rel="stylesheet" href="assets/css/responsive-utilities.css">
+    <link rel="stylesheet" href="assets/css/accessibility-enhancements.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/enhanced.css">
+    <link rel="stylesheet" href="assets/css/design-system.css">
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/security-utils.js"></script>
+</head>
+<body>
+    <header class="student-header dashboard-header student">
+        <h1 class="dashboard-title"><i class="fas fa-user-graduate"></i> مرحباً <span id="studentName">طالبنا العزيز</span></h1>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <div class="academic-year-selector" id="academicYearSelectorContainer" style="display: none; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.1); padding: 0.5rem 1rem; border-radius: 8px;">
+                <i class="fas fa-calendar-alt" style="color: var(--warning-400);"></i>
+                <span style="font-size: 0.85rem;">السنة:</span>
+                <select id="academicYearSelect" class="form-input" style="min-width: 120px; padding: 0.35rem; font-size: 0.85rem; background: white; color: #333; border-radius: 6px; border: none;" onchange="onAcademicYearChange()">
+                    <option value="current">الحالية</option>
+                </select>
+            </div>
+            <button onclick="logout()" class="btn-primary-school btn-primary">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+            </button>
+        </div>
+    </header>
+
+    <section class="student-container" id="loginSection">
+        <h2 class="h2-student section-title"><i class="fas fa-key"></i> تسجيل دخول الطالب</h2>
+        <form class="form-student form-card" id="studentLoginForm">
+            <div class="form-group-student">
+                <label for="studentCode">رمز الطالب</label>
+                <input type="text" id="studentCode" placeholder="أدخل رمز الطالب" class="form-control form-input" required>
+            </div>
+            <div class="form-group-student">
+                <label for="studentPassword">كلمة المرور</label>
+                <input type="password" id="studentPassword" placeholder="أدخل كلمة المرور (إن وجدت)" class="form-control form-input" autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn-primary-student btn-primary">دخول</button>
+        </form>
+    </section>
+
+    <main class="student-container" id="portalSection" style="display:none">
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('detailed-scores')">الدرجات التفصيلية</div>
+            <div class="tab" onclick="switchTab('attendance')">سجل الحضور</div>
+            <div class="tab" onclick="switchTab('comprehensive-report')">التقرير التعليمي الشامل</div>
+        </div>
+
+        <!-- قسم الدرجات التفصيلية -->
+        <div id="detailed-scores" class="tab-content active">
+            <section class="section-card">
+                <h2 class="h2-student section-title"><i class="fas fa-chart-bar"></i> الدرجات التفصيلية</h2>
+                <table class="table-student table-enhanced" id="detailedScoresTable">
+                    <thead>
+                        <tr>
+                            <th class="th-student">المادة</th>
+                            <th class="th-student">شهر الأول</th>
+                            <th class="th-student">شهر الثاني</th>
+                            <th class="th-student">نصف السنة</th>
+                            <th class="th-student">شهر الثالث</th>
+                            <th class="th-student">شهر الرابع</th>
+                            <th class="th-student">نهاية السنة</th>
+                            <th class="th-student">النتيجة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detailedScoresTableBody"></tbody>
+                </table>
+            </section>
+        </div>
+
+        <!-- قسم الحضور -->
+        <div id="attendance" class="tab-content">
+            <section class="section-card">
+                <h2 class="h2-student section-title"><i class="fas fa-calendar-check"></i> سجل الحضور اليومي</h2>
+                <table class="table-student table-enhanced" id="attendanceTable">
+                    <thead>
+                        <tr>
+                            <th class="th-student">التاريخ</th>
+                            <th class="th-student">الحالة العامة</th>
+                            <th class="th-student">تفاصيل الحضور</th>
+                            <th class="th-student">التاريخ المسجل</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceTableBody"></tbody>
+                </table>
+            </section>
+        </div>
+
+        <!-- التقرير التعليمي الشامل -->
+        <div id="comprehensive-report" class="tab-content">
+            <section class="section-card">
+                <h2 class="h2-student section-title"><i class="fas fa-clipboard-list"></i> التقرير التعليمي الشامل</h2>
+                <div id="comprehensiveReportContainer" class="comprehensive-report-container">
+                    <div class="report-loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>جاري تحميل التقرير...</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Performance Insights Section - Now positioned below grades -->
+        <div class="section-card" id="performanceInsightsSection" style="display:none">
+            <h2 class="h2-student section-title"><i class="fas fa-lightbulb"></i> رؤى الأداء والتنبؤات</h2>
+            <div class="performance-insights">
+                <div class="insights-container grid-container grid-auto-fit">
+                    <div class="insight-card card">
+                        <div class="insight-title">المعدل العام</div>
+                        <div class="insight-value" id="studentAvgGrade">0</div>
+                    </div>
+                    <div class="insight-card card">
+                        <div class="insight-title">التنبؤ بالأداء</div>
+                        <div class="insight-value" id="studentPerformancePrediction">متوسط</div>
+                    </div>
+                    <div class="insight-card card" id="passFailCard">
+                        <div class="insight-title">توقع النجاح/الرسوب</div>
+                        <div class="insight-value" id="passFailPrediction">-</div>
+                    </div>
+                </div>
+                
+                <!-- Pass/Fail Prediction Details -->
+                <div id="predictionDetailsBox" class="prediction-box" style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: var(--radius-lg); border-right: 4px solid #6c757d; display: none;">
+                    <div id="predictionMessage" style="font-weight: 500; margin-bottom: 0.5rem;"></div>
+                    <div id="predictionConfidence" style="font-size: 0.9rem; color: #6c757d;"></div>
+                </div>
+
+                <!-- Forecasted Grades Section -->
+                <div id="forecastSection" style="margin-top: 1.5rem; display: none;">
+                    <h3 style="margin-bottom: 1rem; color: var(--brand-primary-800);"><i class="fas fa-chart-line" style="color: var(--brand-primary-500);"></i> الدرجات المتوقعة للفترات القادمة</h3>
+                    <div id="forecastContainer" class="forecast-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;"></div>
+                </div>
+                
+                <div class="recommendations-box" style="margin-top: 1.5rem; padding: 1.5rem; background: var(--brand-primary-50); border-radius: var(--radius-lg); border-right: 5px solid var(--brand-primary-500);">
+                    <h3 style="margin-bottom: 1rem; color: var(--brand-primary-800);"><i class="fas fa-graduation-cap" style="color: var(--brand-primary-500);"></i> الإرشاد الأكاديمي</h3>
+                    <div id="studentRecommendations" style="line-height: 1.6;">-</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let currentStudent = null;
+        let academicYears = [];
+        let currentAcademicYearId = null;
+        let selectedAcademicYearId = 'current';
+
+        // Check for existing login on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const storedStudent = localStorage.getItem('student');
+            if (storedStudent) {
+                try {
+                    currentStudent = JSON.parse(storedStudent);
+                    if (currentStudent && currentStudent.full_name) {
+                        // Student is already authenticated, show portal directly
+                        document.getElementById('loginSection').style.display = 'none';
+                        document.getElementById('portalSection').style.display = 'block';
+                        document.getElementById('studentName').textContent = currentStudent.full_name;
+                        document.getElementById('performanceInsightsSection').style.display = 'block';
+                        loadAcademicYears();
+                        displayStudentData();
+                    }
+                } catch (e) {
+                    console.error('Error parsing stored student data:', e);
+                    localStorage.removeItem('student');
+                }
+            }
+        });
+
+        // Grade thresholds based on grade scale
+        const GRADE_THRESHOLDS = {
+            scale10: {
+                maxGrade: 10,
+                passThreshold: 5,
+                safeThreshold: 7,
+                atRiskRange: '5-6',
+                safeRange: '7-10',
+                failRange: '0-4'
+            },
+            scale100: {
+                maxGrade: 100,
+                passThreshold: 50,
+                safeThreshold: 70,
+                atRiskRange: '50-69',
+                safeRange: '70-100',
+                failRange: '0-49'
+            }
+        };
+
+        // Period order for trend analysis
+        const PERIOD_ORDER = ['month1', 'month2', 'midterm', 'month3', 'month4', 'final'];
+        const PERIOD_NAMES = {
+            month1: 'شهر الأول',
+            month2: 'شهر الثاني',
+            midterm: 'نصف السنة',
+            month3: 'شهر الثالث',
+            month4: 'شهر الرابع',
+            final: 'نهاية السنة'
+        };
+
+        // Analyze grade trends for a subject
+        function analyzeGradeTrend(grades, maxGrade) {
+            const thresholds = maxGrade === 10 ? 
+                { passThreshold: 5, safeThreshold: 7 } : 
+                { passThreshold: 50, safeThreshold: 70 };
+            
+            const gradeSequence = [];
+            let firstNonZeroIndex = -1;
+            let lastNonZeroIndex = -1;
+            
+            PERIOD_ORDER.forEach((period, index) => {
+                const grade = parseInt(grades[period]) || 0;
+                gradeSequence.push({ period, grade, index });
+                if (grade > 0) {
+                    if (firstNonZeroIndex === -1) firstNonZeroIndex = index;
+                    lastNonZeroIndex = index;
+                }
+            });
+            
+            if (firstNonZeroIndex === -1) {
+                return {
+                    trend: 'none',
+                    hasImprovement: false,
+                    hasDeterioration: false,
+                    recommendations: [],
+                    latestGrade: 0,
+                    firstGrade: 0,
+                    consistency: 'unknown'
+                };
+            }
+            
+            const nonZeroGrades = gradeSequence.filter(g => g.grade > 0);
+            const firstGrade = nonZeroGrades[0];
+            const latestGrade = nonZeroGrades[nonZeroGrades.length - 1];
+            
+            let hasSignificantImprovement = false;
+            let hasSignificantDeterioration = false;
+            let hadZeroBeforeGoodGrade = false;
+            
+            // Check for zeros before good grades
+            for (let i = 0; i < gradeSequence.length; i++) {
+                const current = gradeSequence[i];
+                if (current.grade === 0 && i < lastNonZeroIndex) {
+                    for (let j = i + 1; j < gradeSequence.length; j++) {
+                        if (gradeSequence[j].grade > 0) {
+                            if (gradeSequence[j].grade >= thresholds.safeThreshold) {
+                                hadZeroBeforeGoodGrade = true;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            // Analyze consecutive grade changes
+            for (let i = 1; i < nonZeroGrades.length; i++) {
+                const prev = nonZeroGrades[i - 1];
+                const curr = nonZeroGrades[i];
+                const changePercent = ((curr.grade - prev.grade) / maxGrade) * 100;
+                
+                if (changePercent >= 30) hasSignificantImprovement = true;
+                if (changePercent <= -30) hasSignificantDeterioration = true;
+            }
+            
+            let trend = 'stable';
+            const overallChangePercent = ((latestGrade.grade - firstGrade.grade) / maxGrade) * 100;
+            if (overallChangePercent >= 20) trend = 'improving';
+            else if (overallChangePercent <= -20) trend = 'declining';
+            
+            const avgGrade = nonZeroGrades.reduce((sum, g) => sum + g.grade, 0) / nonZeroGrades.length;
+            const variance = nonZeroGrades.reduce((sum, g) => sum + Math.pow(g.grade - avgGrade, 2), 0) / nonZeroGrades.length;
+            const consistencyRatio = Math.sqrt(variance) / maxGrade;
+            
+            let consistency = 'consistent';
+            if (consistencyRatio > 0.25) consistency = 'inconsistent';
+            else if (consistencyRatio > 0.15) consistency = 'variable';
+            
+            return {
+                trend,
+                hasImprovement: hasSignificantImprovement || hadZeroBeforeGoodGrade,
+                hasDeterioration: hasSignificantDeterioration,
+                hadZeroBeforeGoodGrade,
+                latestGrade: latestGrade.grade,
+                latestPeriod: latestGrade.period,
+                firstGrade: firstGrade.grade,
+                firstPeriod: firstGrade.period,
+                avgGrade,
+                consistency
+            };
+        }
+
+        // ============================================================================
+        // PROFESSIONAL ACADEMIC RECOMMENDATION ENGINE FOR STUDENT PORTAL
+        // ============================================================================
+        class StudentAcademicAdvisor {
+            constructor(scores, maxGrade, thresholds, studentGrade) {
+                this.scores = scores;
+                this.maxGrade = maxGrade;
+                this.thresholds = thresholds;
+                this.studentGrade = studentGrade;
+                this.analysis = this.analyzePerformance();
+            }
+
+            analyzePerformance() {
+                const subjects = {};
+                let totalGrades = 0;
+                let gradeCount = 0;
+                let strongSubjects = [];
+                let moderateSubjects = [];
+                let weakSubjects = [];
+                let improvingSubjects = [];
+                let decliningSubjects = [];
+                let inconsistentSubjects = [];
+                let missedAssessments = [];
+
+                for (const subject in this.scores) {
+                    const subjectGrades = this.scores[subject];
+                    const trend = analyzeGradeTrend(subjectGrades, this.maxGrade);
+                    
+                    let subjectTotal = 0;
+                    let subjectCount = 0;
+                    let periodGrades = [];
+
+                    PERIOD_ORDER.forEach(period => {
+                        const grade = parseInt(subjectGrades[period]) || 0;
+                        periodGrades.push({ period, grade });
+                        if (grade > 0) {
+                            subjectTotal += grade;
+                            subjectCount++;
+                            totalGrades += grade;
+                            gradeCount++;
+                        } else if (trend.latestGrade > 0) {
+                            const hasLaterGrade = PERIOD_ORDER.slice(PERIOD_ORDER.indexOf(period) + 1)
+                                .some(p => (parseInt(subjectGrades[p]) || 0) > 0);
+                            if (hasLaterGrade) {
+                                missedAssessments.push({ subject, period: PERIOD_NAMES[period] });
+                            }
+                        }
+                    });
+
+                    if (subjectCount > 0) {
+                        const avg = subjectTotal / subjectCount;
+                        const percentage = (avg / this.maxGrade) * 100;
+                        
+                        const subjectData = {
+                            name: subject,
+                            average: avg,
+                            percentage,
+                            trend,
+                            gradeCount: subjectCount,
+                            periodGrades,
+                            latestGrade: trend.latestGrade,
+                            consistency: trend.consistency
+                        };
+
+                        subjects[subject] = subjectData;
+
+                        if (avg >= this.thresholds.safeThreshold) {
+                            strongSubjects.push(subjectData);
+                        } else if (avg >= this.thresholds.passThreshold) {
+                            moderateSubjects.push(subjectData);
+                        } else {
+                            weakSubjects.push(subjectData);
+                        }
+
+                        if (trend.hasImprovement) improvingSubjects.push(subjectData);
+                        if (trend.hasDeterioration) decliningSubjects.push(subjectData);
+                        if (trend.consistency === 'inconsistent') inconsistentSubjects.push(subjectData);
+                    }
+                }
+
+                const overallAvg = gradeCount > 0 ? totalGrades / gradeCount : 0;
+                const overallPercentage = (overallAvg / this.maxGrade) * 100;
+
+                return {
+                    subjects,
+                    overallAvg,
+                    overallPercentage,
+                    strongSubjects: strongSubjects.sort((a, b) => b.average - a.average),
+                    moderateSubjects: moderateSubjects.sort((a, b) => b.average - a.average),
+                    weakSubjects: weakSubjects.sort((a, b) => a.average - b.average),
+                    improvingSubjects,
+                    decliningSubjects,
+                    inconsistentSubjects,
+                    missedAssessments,
+                    totalSubjects: Object.keys(subjects).length,
+                    assessedPeriods: gradeCount
+                };
+            }
+
+            getPerformanceLevel() {
+                const pct = this.analysis.overallPercentage;
+                if (pct >= 90) return { level: 'excellent', label: 'متميز', icon: '🌟' };
+                if (pct >= 80) return { level: 'very-good', label: 'جيد جداً', icon: '⭐' };
+                if (pct >= 70) return { level: 'good', label: 'جيد', icon: '✅' };
+                if (pct >= 60) return { level: 'satisfactory', label: 'مقبول', icon: '🟡' };
+                if (pct >= 50) return { level: 'at-risk', label: 'تحذير', icon: '⚠️' };
+                return { level: 'critical', label: 'حرج', icon: '🚨' };
+            }
+
+            generatePersonalSummary() {
+                const a = this.analysis;
+                const perf = this.getPerformanceLevel();
+                const summary = [];
+
+                summary.push(`<div class="rec-header">${perf.icon} <strong>${perf.label}</strong> | ${a.overallAvg.toFixed(1)}/${this.maxGrade} (${a.overallPercentage.toFixed(0)}%)</div>`);
+                
+                const stats = [];
+                if (a.strongSubjects.length > 0) stats.push(`<span class="rec-badge success">${a.strongSubjects.length} متفوق</span>`);
+                if (a.moderateSubjects.length > 0) stats.push(`<span class="rec-badge warning">${a.moderateSubjects.length} تحذير</span>`);
+                if (a.weakSubjects.length > 0) stats.push(`<span class="rec-badge danger">${a.weakSubjects.length} ضعيف</span>`);
+                if (stats.length > 0) summary.push(`<div class="rec-stats">${stats.join(' ')}</div>`);
+
+                return summary;
+            }
+
+            generateStrengthsSection() {
+                const a = this.analysis;
+                const strengths = [];
+
+                if (a.strongSubjects.length === 0 && a.improvingSubjects.length === 0) {
+                    return [];
+                }
+
+                let items = [];
+                a.strongSubjects.forEach(s => {
+                    let badge = s.trend.trend === 'improving' ? ' ↑' : (s.consistency === 'consistent' ? ' ●' : '');
+                    items.push(`<span class="rec-item success">${escapeHtml(s.name)} ${s.average.toFixed(1)}${badge}</span>`);
+                });
+
+                const improvingNotStrong = a.improvingSubjects.filter(s => !a.strongSubjects.find(str => str.name === s.name));
+                improvingNotStrong.forEach(s => {
+                    items.push(`<span class="rec-item improving">${escapeHtml(s.name)} ↑${s.trend.latestGrade}</span>`);
+                });
+
+                if (items.length > 0) {
+                    strengths.push(`<div class="rec-section"><span class="rec-label">💪 نقاط القوة:</span> ${items.join(' ')}</div>`);
+                }
+
+                return strengths;
+            }
+
+            generateImprovementAreas() {
+                const a = this.analysis;
+                const areas = [];
+
+                // Critical subjects
+                if (a.weakSubjects.length > 0) {
+                    let items = a.weakSubjects.map(s => {
+                        let badge = s.trend.hasImprovement ? ' ↑' : (s.trend.hasDeterioration ? ' ↓' : '');
+                        return `<span class="rec-item danger">${escapeHtml(s.name)} ${s.average.toFixed(1)}${badge}</span>`;
+                    });
+                    areas.push(`<div class="rec-section"><span class="rec-label">🚨 تحتاج تقوية:</span> ${items.join(' ')}</div>`);
+                }
+
+                // At-risk subjects
+                if (a.moderateSubjects.length > 0) {
+                    let items = a.moderateSubjects.map(s => {
+                        const gap = (this.thresholds.safeThreshold - s.average).toFixed(1);
+                        return `<span class="rec-item warning">${escapeHtml(s.name)} -${gap}</span>`;
+                    });
+                    areas.push(`<div class="rec-section"><span class="rec-label">⚠️ منطقة الخطر:</span> ${items.join(' ')}</div>`);
+                }
+
+                // Declining (not already weak)
+                const decliningNotWeak = a.decliningSubjects.filter(s => !a.weakSubjects.find(w => w.name === s.name));
+                if (decliningNotWeak.length > 0) {
+                    let items = decliningNotWeak.map(s => `<span class="rec-item declining">${escapeHtml(s.name)} ↓</span>`);
+                    areas.push(`<div class="rec-section"><span class="rec-label">📉 تراجع:</span> ${items.join(' ')}</div>`);
+                }
+
+                // Inconsistent
+                if (a.inconsistentSubjects.length > 0) {
+                    let items = a.inconsistentSubjects.map(s => `<span class="rec-item unstable">${escapeHtml(s.name)}</span>`);
+                    areas.push(`<div class="rec-section"><span class="rec-label">⚡ غير مستقر:</span> ${items.join(' ')}</div>`);
+                }
+
+                // Missed assessments
+                if (a.missedAssessments.length > 0) {
+                    const grouped = {};
+                    a.missedAssessments.forEach(m => {
+                        if (!grouped[m.subject]) grouped[m.subject] = [];
+                        grouped[m.subject].push(m.period);
+                    });
+                    let items = Object.keys(grouped).map(subj => `<span class="rec-item info">${subj}</span>`);
+                    areas.push(`<div class="rec-section"><span class="rec-label">📋 فاتك:</span> ${items.join(' ')}</div>`);
+                }
+
+                if (areas.length === 0 && a.strongSubjects.length > 0) {
+                    areas.push(`<div class="rec-section success-msg">✅ أداء ممتاز - استمر!</div>`);
+                }
+
+                return areas;
+            }
+
+            generateStudyPlan() {
+                const a = this.analysis;
+                const perf = this.getPerformanceLevel();
+                const plan = [];
+
+                // Only show plan if there are areas to improve
+                if (a.weakSubjects.length === 0 && a.moderateSubjects.length === 0 && 
+                    (perf.level === 'excellent' || perf.level === 'very-good')) {
+                    return [];
+                }
+
+                let tips = [];
+                if (perf.level === 'excellent' || perf.level === 'very-good') {
+                    tips = ['استمر بنفس الأسلوب', 'شارك بالمسابقات'];
+                } else if (perf.level === 'good' || perf.level === 'satisfactory') {
+                    tips = ['+30 دقيقة دراسة يومياً', 'ركز على الفهم'];
+                } else {
+                    tips = ['2-3 ساعات دراسة يومياً', 'دروس تقوية', 'اسأل المعلم'];
+                }
+
+                // Priority subjects
+                let priority = [];
+                if (a.weakSubjects.length > 0) {
+                    priority = a.weakSubjects.slice(0, 3).map(s => s.name);
+                } else if (a.moderateSubjects.length > 0) {
+                    priority = a.moderateSubjects.slice(0, 3).map(s => s.name);
+                }
+
+                if (priority.length > 0) {
+                    plan.push(`<div class="rec-section"><span class="rec-label">📝 الأولوية:</span> <span class="rec-priority">${priority.join('، ')}</span></div>`);
+                }
+                
+                plan.push(`<div class="rec-section"><span class="rec-label">💡 نصائح:</span> <span class="rec-tips">${tips.join(' • ')}</span></div>`);
+
+                return plan;
+            }
+
+            generateMotivationalMessage() {
+                const perf = this.getPerformanceLevel();
+                const messages = [];
+
+                let msg = '';
+                if (perf.level === 'excellent' || perf.level === 'very-good') {
+                    msg = 'تميز واضح! استمر في التفوق.';
+                } else if (perf.level === 'good' || perf.level === 'satisfactory') {
+                    msg = 'أنت على الطريق الصحيح.';
+                } else if (perf.level === 'at-risk') {
+                    msg = 'ابدأ الآن - التحسن ممكن.';
+                } else {
+                    msg = 'كل خطوة تقربك من النجاح.';
+                }
+
+                messages.push(`<div class="rec-motivation">💬 ${msg}</div>`);
+                return messages;
+            }
+
+            generateFullAdvice() {
+                const advice = [];
+                
+                advice.push(...this.generatePersonalSummary());
+                advice.push(...this.generateStrengthsSection());
+                advice.push(...this.generateImprovementAreas());
+                advice.push(...this.generateStudyPlan());
+                advice.push(...this.generateMotivationalMessage());
+                advice.push(`<div class="rec-footer">النجاح: ${this.thresholds.passThreshold}/${this.maxGrade} | الأمان: ${this.thresholds.safeThreshold}+</div>`);
+                
+                return advice;
+            }
+        }
+
+        function generateStudentRecommendations(scores, maxGrade, thresholds, studentGrade) {
+            const advisor = new StudentAcademicAdvisor(scores, maxGrade, thresholds, studentGrade);
+            return advisor.generateFullAdvice();
+        }
+
+        // AI Performance Prediction Model with pass/fail forecasting and future grade prediction
+        class PerformanceModel {
+            predictPerformance(student) {
+                if (!student || !student.detailed_scores) return { 
+                    level: 'average', 
+                    score: 0, 
+                    recommendations: ['لا توجد بيانات كافية'],
+                    riskLevel: 'unknown',
+                    subjectTrends: {},
+                    passFailPrediction: 'غير محدد',
+                    predictedGrades: {}
+                };
+                
+                const scores = typeof student.detailed_scores === 'string' ? JSON.parse(student.detailed_scores) : student.detailed_scores;
+                let totalGrades = 0;
+                let gradeCount = 0;
+                let maxGrade = this.getMaxGradeForStudent(student.grade);
+                let thresholds = this.getThresholds(maxGrade);
+                let poorSubjects = [];
+                let atRiskSubjects = [];
+                let safeSubjects = [];
+                let improvingSubjects = [];
+                let decliningSubjects = [];
+                let inconsistentSubjects = [];
+                let subjectTrends = {};
+                let subjectPredictions = {};
+                
+                for (const subject in scores) {
+                    const subjectGrades = scores[subject];
+                    let subjectTotal = 0;
+                    let subjectGradeCount = 0;
+                    
+                    // Analyze trend for this subject
+                    const trendAnalysis = analyzeGradeTrend(subjectGrades, maxGrade);
+                    subjectTrends[subject] = trendAnalysis;
+                    
+                    // Predict future grades for this subject
+                    subjectPredictions[subject] = this.predictSubjectGrades(subjectGrades, trendAnalysis, maxGrade);
+                    
+                    for (const period in subjectGrades) {
+                        const grade = parseInt(subjectGrades[period]) || 0;
+                        if (grade > 0) {
+                            subjectTotal += grade;
+                            subjectGradeCount++;
+                            totalGrades += grade;
+                            gradeCount++;
+                        }
+                    }
+                    
+                    if (subjectGradeCount > 0) {
+                        const subjectAvg = subjectTotal / subjectGradeCount;
+                        const subjectData = {
+                            name: subject,
+                            avg: subjectAvg,
+                            trend: trendAnalysis,
+                            latestGrade: trendAnalysis.latestGrade,
+                            prediction: subjectPredictions[subject]
+                        };
+                        
+                        if (subjectAvg < thresholds.passThreshold) {
+                            poorSubjects.push(subjectData);
+                        } else if (subjectAvg < thresholds.safeThreshold) {
+                            atRiskSubjects.push(subjectData);
+                        } else {
+                            safeSubjects.push(subjectData);
+                        }
+                        
+                        // Track trend categories
+                        if (trendAnalysis.hasImprovement) {
+                            improvingSubjects.push(subjectData);
+                        }
+                        if (trendAnalysis.hasDeterioration) {
+                            decliningSubjects.push(subjectData);
+                        }
+                        if (trendAnalysis.consistency === 'inconsistent') {
+                            inconsistentSubjects.push(subjectData);
+                        }
+                    }
+                }
+
+                const avg = gradeCount > 0 ? (totalGrades / (gradeCount * maxGrade)) * 100 : 0;
+                const rawAvg = gradeCount > 0 ? totalGrades / gradeCount : 0;
+                let level = 'average';
+                let riskLevel = 'safe';
+
+                const safePercentage = (thresholds.safeThreshold / maxGrade) * 100;
+                const passPercentage = (thresholds.passThreshold / maxGrade) * 100;
+
+                if (avg >= 90) {
+                    level = 'excellent';
+                    riskLevel = 'safe';
+                } else if (avg >= safePercentage) {
+                    level = 'good';
+                    riskLevel = 'safe';
+                } else if (avg >= passPercentage) {
+                    level = 'average';
+                    riskLevel = 'at-risk';
+                } else {
+                    level = 'needs-improvement';
+                    riskLevel = 'fail';
+                }
+
+                // Calculate pass/fail prediction
+                const passFailPrediction = this.calculatePassFailPrediction(
+                    rawAvg, thresholds, subjectPredictions, poorSubjects.length, 
+                    atRiskSubjects.length, safeSubjects.length
+                );
+
+                // Generate professional comprehensive recommendations
+                const recommendations = generateStudentRecommendations(scores, maxGrade, thresholds, student.grade);
+
+                return { 
+                    level, 
+                    score: avg, 
+                    recommendations, 
+                    riskLevel, 
+                    rawAvg, 
+                    maxGrade,
+                    thresholds,
+                    subjectTrends,
+                    improvingSubjects,
+                    decliningSubjects,
+                    inconsistentSubjects,
+                    poorSubjects,
+                    atRiskSubjects,
+                    safeSubjects,
+                    passFailPrediction,
+                    subjectPredictions
+                };
+            }
+
+            // Predict future grades for a subject based on trend analysis
+            predictSubjectGrades(subjectGrades, trendAnalysis, maxGrade) {
+                const periods = ['month1', 'month2', 'midterm', 'month3', 'month4', 'final'];
+                const periodNames = {
+                    'month1': 'شهر أول',
+                    'month2': 'شهر ثاني', 
+                    'midterm': 'نصف السنة',
+                    'month3': 'شهر ثالث',
+                    'month4': 'شهر رابع',
+                    'final': 'نهائي'
+                };
+                
+                // Get existing grades
+                const existingGrades = {};
+                const missingPeriods = [];
+                
+                periods.forEach(period => {
+                    const grade = parseInt(subjectGrades[period]) || 0;
+                    if (grade > 0) {
+                        existingGrades[period] = grade;
+                    } else {
+                        missingPeriods.push(period);
+                    }
+                });
+
+                // If all periods have grades, no prediction needed
+                if (missingPeriods.length === 0) {
+                    return {
+                        currentAverage: trendAnalysis.avgGrade || 0,
+                        predictedAverage: trendAnalysis.avgGrade || 0,
+                        missingPeriods: [],
+                        forecast: {}
+                    };
+                }
+
+                // Calculate prediction based on trend
+                let predictedGrade = trendAnalysis.latestGrade || trendAnalysis.avgGrade || (maxGrade * 0.6);
+                
+                // Adjust based on trend direction
+                if (trendAnalysis.trend === 'improving') {
+                    predictedGrade = Math.min(maxGrade, predictedGrade * 1.05); // 5% improvement
+                } else if (trendAnalysis.trend === 'declining') {
+                    predictedGrade = Math.max(0, predictedGrade * 0.95); // 5% decline
+                }
+
+                // Generate forecast for missing periods
+                const forecast = {};
+                missingPeriods.forEach(period => {
+                    // Add some variation to make predictions more realistic
+                    const variation = (Math.random() - 0.5) * (maxGrade * 0.1); // ±5% variation
+                    let periodPrediction = Math.round(Math.max(0, Math.min(maxGrade, predictedGrade + variation)));
+                    
+                    // Ensure passing grade if student is improving
+                    if (trendAnalysis.trend === 'improving' && periodPrediction < maxGrade * 0.5) {
+                        periodPrediction = Math.round(maxGrade * 0.55);
+                    }
+                    
+                    forecast[period] = {
+                        grade: periodPrediction,
+                        periodName: periodNames[period]
+                    };
+                });
+
+                // Calculate predicted final average
+                let totalPredicted = Object.values(existingGrades).reduce((a, b) => a + b, 0);
+                Object.values(forecast).forEach(f => totalPredicted += f.grade);
+                const predictedAverage = Math.round(totalPredicted / periods.length);
+
+                return {
+                    currentAverage: trendAnalysis.avgGrade || 0,
+                    predictedAverage: predictedAverage,
+                    missingPeriods: missingPeriods,
+                    forecast: forecast
+                };
+            }
+
+            // Calculate pass/fail prediction based on current performance and trends
+            calculatePassFailPrediction(rawAvg, thresholds, subjectPredictions, poorCount, atRiskCount, safeCount) {
+                const totalSubjects = poorCount + atRiskCount + safeCount;
+                if (totalSubjects === 0) return { status: 'غير محدد', confidence: 0, message: 'لا توجد بيانات كافية' };
+
+                // Calculate weighted prediction based on subject categories
+                const poorWeight = poorCount * 0;
+                const atRiskWeight = atRiskCount * 0.5;
+                const safeWeight = safeCount * 1;
+                const passProbability = (poorWeight + atRiskWeight + safeWeight) / totalSubjects;
+
+                // Analyze predicted averages
+                let subjectsPredictedToPass = 0;
+                let subjectsPredictedToFail = 0;
+                
+                for (const subject in subjectPredictions) {
+                    const pred = subjectPredictions[subject];
+                    if (pred.predictedAverage >= thresholds.passThreshold) {
+                        subjectsPredictedToPass++;
+                    } else {
+                        subjectsPredictedToFail++;
+                    }
+                }
+
+                // Determine final prediction
+                let status, confidence, message, icon;
+                
+                if (rawAvg >= thresholds.safeThreshold) {
+                    status = 'ناجح';
+                    confidence = 95;
+                    message = 'أداء متميز - المتوقع النجاح بدرجات عالية';
+                    icon = '✅';
+                } else if (rawAvg >= thresholds.passThreshold) {
+                    if (subjectsPredictedToFail === 0) {
+                        status = 'ناجح';
+                        confidence = 80;
+                        message = 'على المسار الصحيح - المتوقع النجاح';
+                        icon = '✅';
+                    } else {
+                        status = 'ناجح بصعوبة';
+                        confidence = 65;
+                        message = 'على حدود النجاح - يحتاج مزيد من الجهد';
+                        icon = '⚠️';
+                    }
+                } else {
+                    // Below passing threshold
+                    const improving = Object.values(subjectPredictions).some(p => p.predictedAverage > rawAvg);
+                    if (improving) {
+                        status = 'راسب (قابل للتحسن)';
+                        confidence = 40;
+                        message = 'حالياً راسب لكن التحسن ممكن بالاجتهاد';
+                        icon = '⚠️';
+                    } else {
+                        status = 'راسب';
+                        confidence = 85;
+                        message = 'تحذير: المتوقع الرسوب بدون تدخل عاجل';
+                        icon = '❌';
+                    }
+                }
+
+                return {
+                    status,
+                    confidence,
+                    message,
+                    icon,
+                    passProbability: Math.round(passProbability * 100),
+                    subjectsPredictedToPass,
+                    subjectsPredictedToFail
+                };
+            }
+
+            getMaxGradeForStudent(studentGrade) {
+                if (!studentGrade) return 100;
+                
+                // Extract the grade parts from the grade string (e.g., "ابتدائي - الأول الابتدائي")
+                const gradeParts = studentGrade.split(' - ');
+                if (gradeParts.length < 2) return 100;
+                
+                const educationalLevel = gradeParts[0].trim(); // e.g., "ابتدائي"
+                const gradeLevel = gradeParts[1].trim(); // e.g., "الأول الابتدائي"
+                
+                // Check if this is an elementary (ابتدائي) school level
+                const isElementary = educationalLevel.includes('ابتدائي') || 
+                                     gradeLevel.includes('ابتدائي') || 
+                                     gradeLevel.includes('الابتدائي');
+                
+                // Only apply 10-point scale to elementary grades 1-4
+                if (isElementary) {
+                    // Check if grade is first, second, third, or fourth
+                    // Handle both formats: with and without the definite article "ال"
+                    const isGrades1to4 = gradeLevel.includes('الأول') || gradeLevel.includes('الثاني') || 
+                                         gradeLevel.includes('الثالث') || gradeLevel.includes('الرابع') ||
+                                         gradeLevel.includes('اول') || gradeLevel.includes('ثاني') || 
+                                         gradeLevel.includes('ثالث') || gradeLevel.includes('رابع') ||
+                                         gradeLevel.includes('الاول');
+                    
+                    // Make sure it's NOT fifth or sixth grade (which should use 100-point scale)
+                    const isGrades5or6 = gradeLevel.includes('الخامس') || gradeLevel.includes('السادس') ||
+                                         gradeLevel.includes('خامس') || gradeLevel.includes('سادس');
+                    
+                    if (isGrades1to4 && !isGrades5or6) {
+                        return 10;
+                    }
+                }
+                
+                // For all other grades (including elementary 5-6, middle, secondary, preparatory), max grade is 100
+                return 100;
+            }
+
+            getThresholds(maxGrade) {
+                return maxGrade === 10 ? GRADE_THRESHOLDS.scale10 : GRADE_THRESHOLDS.scale100;
+            }
+        }
+
+        const aiModel = new PerformanceModel();
+
+        document.getElementById('studentLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const code = document.getElementById('studentCode').value;
+            const passwordEl = document.getElementById('studentPassword');
+            const password = passwordEl ? passwordEl.value : '';
+            const res = await fetch('/api/student/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code, password })
+            });
+            const data = await res.json();
+            if (data.error) {
+                toastManager.showError(data.error);
+            } else {
+                currentStudent = data.student;
+                localStorage.setItem('student', JSON.stringify(currentStudent));
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('portalSection').style.display = 'block';
+                document.getElementById('studentName').textContent = currentStudent.full_name;
+                document.getElementById('performanceInsightsSection').style.display = 'block';
+                loadAcademicYears();
+                displayStudentData();
+                toastManager.showSuccess('تم تسجيل الدخول بنجاح!');
+            }
+        });
+
+        // التبديل بين علامات التبويب
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // تحديد التبويب النشط
+            const tabIndex = {
+                'detailed-scores': 1,
+                'attendance': 2,
+                'comprehensive-report': 3
+            };
+            
+            document.querySelector(`.tab:nth-child(${tabIndex[tabId] || 1})`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+            
+            // تحميل التقرير الشامل عند التبديل لتبويبه
+            if (tabId === 'comprehensive-report') {
+                loadComprehensiveReport();
+            }
+        }
+
+        // Get grade status with at-risk thresholds and trend info
+        function getGradeStatus(gradeValue, maxGrade, trendAnalysis = null) {
+            const thresholds = maxGrade === 10 ? GRADE_THRESHOLDS.scale10 : GRADE_THRESHOLDS.scale100;
+            
+            // Build trend icon and info
+            let trendIcon = '';
+            let trendInfo = '';
+            
+            if (trendAnalysis) {
+                if (trendAnalysis.hadZeroBeforeGoodGrade) {
+                    trendIcon = ' 📈';
+                    trendInfo = `تحسن ممتاز من 0 إلى ${trendAnalysis.latestGrade}/${maxGrade}`;
+                } else if (trendAnalysis.hasImprovement) {
+                    trendIcon = ' ↑';
+                    trendInfo = `مسار تصاعدي: ${trendAnalysis.firstGrade} → ${trendAnalysis.latestGrade}`;
+                } else if (trendAnalysis.hasDeterioration) {
+                    trendIcon = ' ↓';
+                    trendInfo = `مسار تنازلي: ${trendAnalysis.firstGrade} → ${trendAnalysis.latestGrade}`;
+                } else if (trendAnalysis.consistency === 'inconsistent') {
+                    trendIcon = ' ⚡';
+                    trendInfo = 'أداء غير مستقر';
+                }
+            }
+            
+            if (gradeValue === 0) {
+                return { status: 'pending', text: 'معلق', cssClass: 'grade-pending', recommendation: '', trendIcon: '', trendInfo: '' };
+            } else if (gradeValue >= thresholds.safeThreshold) {
+                let recommendation = 'أداء ممتاز';
+                if (trendAnalysis && trendAnalysis.hadZeroBeforeGoodGrade) {
+                    recommendation = `تحسن ممتاز! استمر في الحفاظ على الاستمرارية.`;
+                }
+                return { status: 'safe', text: 'ناجح ✅' + trendIcon, cssClass: 'grade-safe', recommendation, trendIcon, trendInfo };
+            } else if (gradeValue >= thresholds.passThreshold) {
+                let recommendation = 'في منطقة الخطر';
+                if (trendAnalysis && trendAnalysis.hasImprovement) {
+                    recommendation = `مسار تصاعدي! استمر للوصول للمنطقة الآمنة.`;
+                } else if (trendAnalysis && trendAnalysis.hasDeterioration) {
+                    recommendation = `تحذير: مسار تنازلي - يحتاج تدخل عاجل`;
+                }
+                return { status: 'at-risk', text: 'ناجح (تحذير) ⚠️' + trendIcon, cssClass: 'grade-at-risk', recommendation, trendIcon, trendInfo };
+            } else {
+                let recommendation = 'يحتاج تقوية';
+                if (trendAnalysis && trendAnalysis.hasImprovement) {
+                    recommendation = `تحسن ملحوظ! استمر للوصول لدرجة النجاح.`;
+                }
+                return { status: 'fail', text: 'راسب ❌' + trendIcon, cssClass: 'grade-fail', recommendation, trendIcon, trendInfo };
+            }
+        }
+
+        function displayStudentData() {
+            // Removed student personal information display
+            
+            // Get max grade for this student
+            const maxGrade = aiModel.getMaxGradeForStudent(currentStudent.grade);
+            const thresholds = aiModel.getThresholds(maxGrade);
+            
+            const tbody = document.getElementById('detailedScoresTableBody');
+            tbody.innerHTML = '';
+            
+            // First priority: Use grades from API (student_grades table - teacher-entered grades)
+            if (currentStudent.gradesFromAPI && currentStudent.gradesFromAPI.length > 0) {
+                currentStudent.gradesFromAPI.forEach(grade => {
+                    const month1 = parseFloat(grade.month1) || 0;
+                    const month2 = parseFloat(grade.month2) || 0;
+                    const midterm = parseFloat(grade.midterm) || 0;
+                    const month3 = parseFloat(grade.month3) || 0;
+                    const month4 = parseFloat(grade.month4) || 0;
+                    const final = parseFloat(grade.final) || 0;
+                    
+                    const scores = { month1, month2, midterm, month3, month4, final };
+                    
+                    // Analyze trend for this subject
+                    const trendAnalysis = analyzeGradeTrend(scores, maxGrade);
+                    
+                    // Get the latest grade entered (from final to month1)
+                    const periods = ['final', 'month4', 'month3', 'midterm', 'month2', 'month1'];
+                    let latestGrade = 0;
+                    
+                    for (let period of periods) {
+                        const gradeVal = parseFloat(scores[period]) || 0;
+                        if (gradeVal > 0) {
+                            latestGrade = gradeVal;
+                            break;
+                        }
+                    }
+                    
+                    // Use enhanced grade status with trend analysis
+                    const gradeStatus = getGradeStatus(latestGrade, maxGrade, trendAnalysis);
+                    
+                    // Build tooltip for trend info
+                    const trendTooltip = gradeStatus.trendInfo ? `title="${gradeStatus.trendInfo}"` : '';
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="td-student">${escapeHtml(grade.subject_name)}</td>
+                        <td class="td-student">${month1}</td>
+                        <td class="td-student">${month2}</td>
+                        <td class="td-student">${midterm}</td>
+                        <td class="td-student">${month3}</td>
+                        <td class="td-student">${month4}</td>
+                        <td class="td-student">${final}</td>
+                        <td class="td-student"><span class="${gradeStatus.cssClass}" ${trendTooltip}>${gradeStatus.text}</span></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } else {
+                // Fallback: Use detailed_scores from student record (legacy storage)
+                const detailedScores = JSON.parse(currentStudent.detailed_scores || '{}');
+                
+                Object.entries(detailedScores).forEach(([subject, scores]) => {
+                    const month1 = parseFloat(scores.month1) || 0;
+                    const month2 = parseFloat(scores.month2) || 0;
+                    const midterm = parseFloat(scores.midterm) || 0;
+                    const month3 = parseFloat(scores.month3) || 0;
+                    const month4 = parseFloat(scores.month4) || 0;
+                    const final = parseFloat(scores.final) || 0;
+                    
+                    // Analyze trend for this subject
+                    const trendAnalysis = analyzeGradeTrend(scores, maxGrade);
+                    
+                    // Get the latest grade entered (from final to month1)
+                    const periods = ['final', 'month4', 'month3', 'midterm', 'month2', 'month1'];
+                    let latestGrade = 0;
+                    
+                    for (let period of periods) {
+                        const grade = parseFloat(scores[period]) || 0;
+                        if (grade > 0) {
+                            latestGrade = grade;
+                            break;
+                        }
+                    }
+                    
+                    // Use enhanced grade status with trend analysis
+                    const gradeStatus = getGradeStatus(latestGrade, maxGrade, trendAnalysis);
+                    
+                    // Build tooltip for trend info
+                    const trendTooltip = gradeStatus.trendInfo ? `title="${gradeStatus.trendInfo}"` : '';
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="td-student">${subject}</td>
+                        <td class="td-student">${month1}</td>
+                        <td class="td-student">${month2}</td>
+                        <td class="td-student">${midterm}</td>
+                        <td class="td-student">${month3}</td>
+                        <td class="td-student">${month4}</td>
+                        <td class="td-student">${final}</td>
+                        <td class="td-student"><span class="${gradeStatus.cssClass}" ${trendTooltip}>${gradeStatus.text}</span></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                
+                if (Object.keys(detailedScores).length === 0) {
+                    tbody.innerHTML = '<tr><td class="td-student" colspan="8">لا توجد درجات مسجلة</td></tr>';
+                }
+            }
+            
+            // عرض سجل الحضور اليومي
+            const dailyAttendance = JSON.parse(currentStudent.daily_attendance || '{}');
+            const attendanceTbody = document.getElementById('attendanceTableBody');
+            attendanceTbody.innerHTML = '';
+            
+            const dates = Object.keys(dailyAttendance).sort().reverse();
+            
+            dates.forEach(date => {
+                const attendance = dailyAttendance[date];
+                const row = document.createElement('tr');
+                
+                // Calculate overall status
+                let overallStatus = 'غير محدد';
+                let statusClass = '';
+                
+                if (attendance.status === 'present') {
+                    overallStatus = 'حاضر';
+                    statusClass = 'status-present';
+                } else if (attendance.status === 'absent') {
+                    overallStatus = 'غائب';
+                    statusClass = 'status-absent';
+                } else if (attendance.status === 'late') {
+                    overallStatus = 'متأخر';
+                    statusClass = 'status-late';
+                } else if (attendance.status === 'excused') {
+                    overallStatus = 'معذور';
+                    statusClass = 'status-excused';
+                }
+                
+                row.innerHTML = `
+                    <td class="td-student">${date}</td>
+                    <td class="td-student"><span class="${statusClass}">${overallStatus}</span></td>
+                    <td class="td-student">${attendance.details || 'لا توجد تفاصيل'}</td>
+                    <td class="td-student">${attendance.recorded_at || date}</td>
+                `;
+                attendanceTbody.appendChild(row);
+            });
+            
+            if (dates.length === 0) {
+                attendanceTbody.innerHTML = '<tr><td class="td-student" colspan="4">لا توجد سجلات حضور</td></tr>';
+            }
+
+            // تحديث رؤى الأداء مع مستويات الخطر
+            const prediction = aiModel.predictPerformance(currentStudent);
+            
+            // Update average display
+            const avgDisplay = prediction.rawAvg ? prediction.rawAvg.toFixed(1) + '/' + prediction.maxGrade : prediction.score.toFixed(1) + '%';
+            document.getElementById('studentAvgGrade').textContent = avgDisplay;
+            
+            // Update performance prediction with risk level indicator
+            let performanceText = '';
+            let performanceClass = '';
+            
+            switch(prediction.level) {
+                case 'excellent':
+                    performanceText = 'ممتاز 🌟';
+                    performanceClass = 'safe';
+                    break;
+                case 'good':
+                    performanceText = 'جيد ✅';
+                    performanceClass = 'safe';
+                    break;
+                case 'average':
+                    performanceText = 'متوسط ⚠️';
+                    performanceClass = 'at-risk';
+                    break;
+                default:
+                    performanceText = 'يحتاج تحسناً ❌';
+                    performanceClass = 'fail';
+            }
+            
+            const predictionElem = document.getElementById('studentPerformancePrediction');
+            predictionElem.textContent = performanceText;
+            predictionElem.className = 'insight-value risk-indicator ' + performanceClass;
+            
+            // Update insight cards based on risk level
+            const insightCards = document.querySelectorAll('.insight-card');
+            insightCards.forEach(card => {
+                card.classList.remove('safe', 'at-risk', 'fail');
+                card.classList.add(prediction.riskLevel);
+            });
+            
+            // Update recommendations box style based on risk level
+            const recommendationsBox = document.querySelector('.recommendations-box');
+            if (recommendationsBox) {
+                recommendationsBox.style.borderRightColor = 
+                    prediction.riskLevel === 'safe' ? '#28a745' :
+                    prediction.riskLevel === 'at-risk' ? '#ffc107' : '#dc3545';
+                recommendationsBox.style.background = 
+                    prediction.riskLevel === 'safe' ? '#f0fff4' :
+                    prediction.riskLevel === 'at-risk' ? '#fffbf0' : '#fff5f5';
+            }
+            
+            const recommendationsElem = document.getElementById('studentRecommendations');
+            if (prediction.recommendations.length > 0) {
+                recommendationsElem.innerHTML = prediction.recommendations.map(r => {
+                    if (r === '') return '<br>';
+                    return `<div style="margin-bottom:0.5rem">${r}</div>`;
+                }).join('');
+            } else {
+                recommendationsElem.textContent = '-';
+            }
+
+            // Display Pass/Fail Prediction
+            const passFailElem = document.getElementById('passFailPrediction');
+            const predictionDetailsBox = document.getElementById('predictionDetailsBox');
+            const predictionMessage = document.getElementById('predictionMessage');
+            const predictionConfidence = document.getElementById('predictionConfidence');
+            
+            if (prediction.passFailPrediction) {
+                const pfp = prediction.passFailPrediction;
+                passFailElem.textContent = pfp.status;
+                passFailElem.className = 'insight-value risk-indicator ' + 
+                    (pfp.status.includes('ناجح') ? 'safe' : pfp.status.includes('راسب') ? 'fail' : 'at-risk');
+                
+                predictionDetailsBox.style.display = 'block';
+                predictionDetailsBox.style.borderRightColor = 
+                    pfp.status.includes('ناجح') ? '#28a745' : pfp.status.includes('راسب') ? '#dc3545' : '#ffc107';
+                predictionMessage.textContent = pfp.icon + ' ' + pfp.message;
+                predictionConfidence.textContent = `نسبة الثقة: ${pfp.confidence}% | احتمالية النجاح: ${pfp.passProbability}%`;
+            }
+
+            // Forecasted Grades section is hidden for students
+            // This feature is only available in the teacher portal
+            const forecastSection = document.getElementById('forecastSection');
+            if (forecastSection) {
+                forecastSection.style.display = 'none';
+            }
+        }
+
+        // دالة نسخ النص إلى الحافظة
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification('تم النسخ إلى الحافظة', 'info');
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('تم النسخ إلى الحافظة', 'info');
+            });
+        }
+
+        // إشعارات
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+
+        // تسجيل الخروج
+        function logout() {
+            if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+                localStorage.removeItem('student');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // ============================================================================
+        // ACADEMIC YEAR MANAGEMENT FOR STUDENT PORTAL
+        // ============================================================================
+
+        // Load academic years for the student's school
+        async function loadAcademicYears() {
+            if (!currentStudent || !currentStudent.school_id) {
+                console.log('No student or school_id available');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/school/${currentStudent.school_id}/academic-years`);
+                const result = await response.json();
+
+                if (result.success && result.academic_years && result.academic_years.length > 0) {
+                    academicYears = result.academic_years;
+                    
+                    // Find current academic year (automatically determined by server based on date)
+                    const currentYear = academicYears.find(y => y.is_current === 1) || academicYears[0];
+                    if (currentYear) {
+                        currentAcademicYearId = currentYear.id;
+                        selectedAcademicYearId = currentYear.id;
+                    }
+
+                    updateAcademicYearSelector();
+                    
+                    // Show the selector
+                    document.getElementById('academicYearSelectorContainer').style.display = 'flex';
+                    
+                    // Load grades from student_grades table for current academic year
+                    // This ensures teacher-entered grades are displayed
+                    if (currentAcademicYearId) {
+                        await loadCurrentYearGrades();
+                        // Re-display student data with loaded grades
+                        displayStudentData();
+                    }
+                } else {
+                    // No academic years defined for this school
+                    document.getElementById('academicYearSelectorContainer').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error loading academic years:', error);
+            }
+        }
+
+        // Load grades for the current academic year from the student_grades table
+        async function loadCurrentYearGrades() {
+            if (!currentStudent || !currentAcademicYearId) return;
+            
+            try {
+                const response = await fetch(`/api/student/${currentStudent.id}/grades/${currentAcademicYearId}`);
+                const result = await response.json();
+                
+                if (result.success && result.raw_grades && result.raw_grades.length > 0) {
+                    // Store grades for display
+                    currentStudent.gradesFromAPI = result.raw_grades;
+                }
+            } catch (error) {
+                console.error('Error loading current year grades:', error);
+            }
+        }
+
+        // Update academic year selector dropdown
+        // The current year is marked automatically based on the present date
+        function updateAcademicYearSelector() {
+            const select = document.getElementById('academicYearSelect');
+            select.innerHTML = '';
+
+            academicYears.forEach(year => {
+                const isCurrent = year.is_current === 1;
+                const option = document.createElement('option');
+                option.value = year.id;
+                option.textContent = isCurrent ? `${year.name} (الحالية)` : year.name;
+                if (isCurrent || currentAcademicYearId === year.id) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+
+            // If we have a current year, select it
+            if (currentAcademicYearId) {
+                select.value = currentAcademicYearId;
+                selectedAcademicYearId = currentAcademicYearId;
+            }
+
+            updateAcademicYearBadge();
+        }
+
+        // Update academic year badge display
+        function updateAcademicYearBadge() {
+            const badge = document.getElementById('academicYearBadge');
+            const badgeText = document.getElementById('academicYearBadgeText');
+
+            if (!selectedAcademicYearId || selectedAcademicYearId == currentAcademicYearId) {
+                badge.style.display = 'none';
+            } else {
+                const selectedYear = academicYears.find(y => y.id == selectedAcademicYearId);
+                if (selectedYear) {
+                    badgeText.textContent = selectedYear.name;
+                    badge.style.display = 'inline-block';
+                }
+            }
+        }
+
+        // Handle academic year change
+        async function onAcademicYearChange() {
+            const select = document.getElementById('academicYearSelect');
+            selectedAcademicYearId = select.value;
+
+            updateAcademicYearBadge();
+
+            // If the current year is selected, load default data
+            if (selectedAcademicYearId == currentAcademicYearId) {
+                displayStudentData();
+            } else {
+                // Load data for the selected academic year
+                await loadDataForAcademicYear(selectedAcademicYearId);
+            }
+        }
+
+        // Load grades and attendance for a specific academic year
+        async function loadDataForAcademicYear(yearId) {
+            if (!currentStudent) return;
+
+            try {
+                // Load grades for the year
+                const gradesResponse = await fetch(`/api/student/${currentStudent.id}/grades/${yearId}`);
+                const gradesResult = await gradesResponse.json();
+
+                // Load attendance for the year
+                const attendanceResponse = await fetch(`/api/student/${currentStudent.id}/attendance/${yearId}`);
+                const attendanceResult = await attendanceResponse.json();
+
+                // Display data - use raw_grades array for detailed display
+                if (gradesResult.success && gradesResult.raw_grades && gradesResult.raw_grades.length > 0) {
+                    displayScoresForYear(gradesResult.raw_grades);
+                } else {
+                    displayNoDataMessage('detailedScoresTableBody', 'لا توجد درجات مسجلة لهذه السنة الدراسية');
+                }
+
+                if (attendanceResult.success && attendanceResult.attendance && attendanceResult.attendance.length > 0) {
+                    displayAttendanceForYear(attendanceResult.attendance);
+                } else {
+                    displayNoDataMessage('attendanceTableBody', 'لا توجد سجلات حضور لهذه السنة الدراسية');
+                }
+
+                // Update performance insights for this year
+                if (gradesResult.success && gradesResult.raw_grades && gradesResult.raw_grades.length > 0) {
+                    updatePerformanceInsightsForYear(gradesResult.raw_grades);
+                }
+
+            } catch (error) {
+                console.error('Error loading data for academic year:', error);
+                showNotification('حدث خطأ في تحميل البيانات', 'error');
+            }
+        }
+
+        // Display grades for a specific academic year
+        function displayScoresForYear(grades) {
+            const tbody = document.getElementById('detailedScoresTableBody');
+            tbody.innerHTML = '';
+
+            const maxGrade = aiModel.getMaxGradeForStudent(currentStudent.grade);
+
+            if (grades.length === 0) {
+                tbody.innerHTML = '<tr><td class="td-student" colspan="8">لا توجد درجات مسجلة لهذه السنة</td></tr>';
+                return;
+            }
+
+            grades.forEach(grade => {
+                const scores = {
+                    month1: grade.month1 || 0,
+                    month2: grade.month2 || 0,
+                    midterm: grade.midterm || 0,
+                    month3: grade.month3 || 0,
+                    month4: grade.month4 || 0,
+                    final: grade.final || 0
+                };
+
+                const trendAnalysis = analyzeGradeTrend(scores, maxGrade);
+                const latestGrade = trendAnalysis.latestGrade || 0;
+                const gradeStatus = getGradeStatus(latestGrade, maxGrade, trendAnalysis);
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="td-student">${escapeHtml(grade.subject_name)}</td>
+                    <td class="td-student">${scores.month1}</td>
+                    <td class="td-student">${scores.month2}</td>
+                    <td class="td-student">${scores.midterm}</td>
+                    <td class="td-student">${scores.month3}</td>
+                    <td class="td-student">${scores.month4}</td>
+                    <td class="td-student">${scores.final}</td>
+                    <td class="td-student"><span class="${gradeStatus.cssClass}">${gradeStatus.text}</span></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Display attendance for a specific academic year
+        function displayAttendanceForYear(attendanceRecords) {
+            const tbody = document.getElementById('attendanceTableBody');
+            tbody.innerHTML = '';
+
+            if (attendanceRecords.length === 0) {
+                tbody.innerHTML = '<tr><td class="td-student" colspan="4">لا توجد سجلات حضور لهذه السنة</td></tr>';
+                return;
+            }
+
+            // Sort by date descending
+            attendanceRecords.sort((a, b) => new Date(b.attendance_date) - new Date(a.attendance_date));
+
+            attendanceRecords.forEach(record => {
+                let statusText = 'حاضر';
+                let statusClass = 'status-present';
+
+                if (record.status === 'absent') {
+                    statusText = 'غائب';
+                    statusClass = 'status-absent';
+                } else if (record.status === 'late') {
+                    statusText = 'متأخر';
+                    statusClass = 'status-late';
+                } else if (record.status === 'excused') {
+                    statusText = 'معذور';
+                    statusClass = 'status-excused';
+                }
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="td-student">${record.attendance_date}</td>
+                    <td class="td-student"><span class="${statusClass}">${statusText}</span></td>
+                    <td class="td-student">${record.notes || '-'}</td>
+                    <td class="td-student">${record.created_at ? new Date(record.created_at).toLocaleDateString('ar-SA') : '-'}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update performance insights for a specific academic year
+        function updatePerformanceInsightsForYear(grades) {
+            // Convert grades array to detailed_scores format
+            const detailedScores = {};
+            grades.forEach(grade => {
+                detailedScores[grade.subject_name] = {
+                    month1: grade.month1 || 0,
+                    month2: grade.month2 || 0,
+                    midterm: grade.midterm || 0,
+                    month3: grade.month3 || 0,
+                    month4: grade.month4 || 0,
+                    final: grade.final || 0
+                };
+            });
+
+            // Create a temporary student object with the grades for this year
+            const tempStudent = { ...currentStudent, detailed_scores: JSON.stringify(detailedScores) };
+
+            // Run prediction
+            const prediction = aiModel.predictPerformance(tempStudent);
+
+            // Update UI
+            const avgDisplay = prediction.rawAvg ? prediction.rawAvg.toFixed(1) + '/' + prediction.maxGrade : prediction.score.toFixed(1) + '%';
+            document.getElementById('studentAvgGrade').textContent = avgDisplay;
+
+            // Update performance prediction
+            let performanceText = '';
+            let performanceClass = '';
+
+            switch(prediction.level) {
+                case 'excellent':
+                    performanceText = 'ممتاز 🌟';
+                    performanceClass = 'safe';
+                    break;
+                case 'good':
+                    performanceText = 'جيد ✅';
+                    performanceClass = 'safe';
+                    break;
+                case 'average':
+                    performanceText = 'متوسط ⚠️';
+                    performanceClass = 'at-risk';
+                    break;
+                default:
+                    performanceText = 'يحتاج تحسناً ❌';
+                    performanceClass = 'fail';
+            }
+
+            const predictionElem = document.getElementById('studentPerformancePrediction');
+            predictionElem.textContent = performanceText;
+            predictionElem.className = 'insight-value risk-indicator ' + performanceClass;
+
+            // Update recommendations
+            const recommendationsElem = document.getElementById('studentRecommendations');
+            if (prediction.recommendations.length > 0) {
+                recommendationsElem.innerHTML = prediction.recommendations.map(r => {
+                    if (r === '') return '<br>';
+                    return `<div style="margin-bottom:0.5rem">${r}</div>`;
+                }).join('');
+            } else {
+                recommendationsElem.textContent = '-';
+            }
+        }
+
+        // Display no data message
+        function displayNoDataMessage(tbodyId, message) {
+            const tbody = document.getElementById(tbodyId);
+            if (tbody) {
+                const colspan = tbodyId === 'detailedScoresTableBody' ? 8 : 4;
+                tbody.innerHTML = `<tr><td class="td-student" colspan="${colspan}">${message}</td></tr>`;
+            }
+        }
+
+        // ============================================================================
+        // COMPREHENSIVE EDUCATIONAL RECOMMENDATIONS REPORT
+        // ============================================================================
+        
+        class ComprehensiveEducationalReport {
+            constructor(studentData, scores, attendance, classAverages, maxGrade, thresholds) {
+                this.student = studentData;
+                this.scores = scores;
+                this.attendance = attendance;
+                this.classAverages = classAverages || {};
+                this.maxGrade = maxGrade;
+                this.thresholds = thresholds;
+                this.analysis = this.analyzeAll();
+                this.educationalStage = this.detectEducationalStage();
+            }
+            
+            detectEducationalStage() {
+                const grade = this.student.grade || '';
+                if (grade.includes('ابتدائي') || grade.includes('الابتدائي')) {
+                    // First 4 grades use 10-point scale, 5-6 use 100-point but still elementary
+                    if (grade.includes('الأول') || grade.includes('الثاني') || 
+                        grade.includes('الثالث') || grade.includes('الرابع') ||
+                        grade.includes('الاول') || grade.includes('ثاني') || 
+                        grade.includes('ثالث') || grade.includes('رابع')) {
+                        return 'ابتدائي-early';
+                    }
+                    return 'ابتدائي';
+                }
+                if (grade.includes('متوسط')) return 'متوسط';
+                if (grade.includes('إعدادي') || grade.includes('اعدادي')) return 'إعدادي';
+                if (grade.includes('ثانوي')) return 'ثانوي';
+                return 'ابتدائي'; // Default
+            }
+            
+            analyzeAll() {
+                const subjects = {};
+                let totalGrades = 0;
+                let gradeCount = 0;
+                let strongSubjects = [];
+                let moderateSubjects = [];
+                let weakSubjects = [];
+                let improvingSubjects = [];
+                let decliningSubjects = [];
+                
+                for (const subject in this.scores) {
+                    const subjectGrades = this.scores[subject];
+                    const trend = analyzeGradeTrend(subjectGrades, this.maxGrade);
+                    
+                    let subjectTotal = 0;
+                    let subjectCount = 0;
+                    
+                    PERIOD_ORDER.forEach(period => {
+                        const grade = parseInt(subjectGrades[period]) || 0;
+                        if (grade > 0) {
+                            subjectTotal += grade;
+                            subjectCount++;
+                            totalGrades += grade;
+                            gradeCount++;
+                        }
+                    });
+                    
+                    if (subjectCount > 0) {
+                        const avg = subjectTotal / subjectCount;
+                        const percentage = (avg / this.maxGrade) * 100;
+                        
+                        const subjectData = {
+                            name: subject,
+                            average: avg,
+                            percentage,
+                            trend,
+                            gradeCount: subjectCount,
+                            latestGrade: trend.latestGrade,
+                            consistency: trend.consistency
+                        };
+                        
+                        subjects[subject] = subjectData;
+                        
+                        if (avg >= this.thresholds.safeThreshold) {
+                            strongSubjects.push(subjectData);
+                        } else if (avg >= this.thresholds.passThreshold) {
+                            moderateSubjects.push(subjectData);
+                        } else {
+                            weakSubjects.push(subjectData);
+                        }
+                        
+                        if (trend.hasImprovement) improvingSubjects.push(subjectData);
+                        if (trend.hasDeterioration) decliningSubjects.push(subjectData);
+                    }
+                }
+                
+                // Calculate attendance percentage
+                let presentDays = 0;
+                let totalDays = 0;
+                const dailyAttendance = this.attendance || {};
+                for (const date in dailyAttendance) {
+                    const dayData = dailyAttendance[date];
+                    for (const subject in dayData) {
+                        totalDays++;
+                        if (dayData[subject] === 'حاضر') presentDays++;
+                    }
+                }
+                const attendancePercent = totalDays > 0 ? (presentDays / totalDays) * 100 : 100;
+                
+                const overallAvg = gradeCount > 0 ? totalGrades / gradeCount : 0;
+                const overallPercentage = (overallAvg / this.maxGrade) * 100;
+                
+                return {
+                    subjects,
+                    overallAvg,
+                    overallPercentage,
+                    attendancePercent,
+                    strongSubjects: strongSubjects.sort((a, b) => b.average - a.average),
+                    moderateSubjects: moderateSubjects.sort((a, b) => b.average - a.average),
+                    weakSubjects: weakSubjects.sort((a, b) => a.average - b.average),
+                    improvingSubjects,
+                    decliningSubjects,
+                    totalSubjects: Object.keys(subjects).length,
+                    hasScores: gradeCount > 0
+                };
+            }
+            
+            getPerformanceLevel() {
+                const pct = this.analysis.overallPercentage;
+                if (pct >= 90) return { level: 'excellent', label: 'ممتاز', icon: '🌟', cssClass: 'excellent' };
+                if (pct >= 80) return { level: 'very-good', label: 'جيد جداً', icon: '⭐', cssClass: 'very-good' };
+                if (pct >= 70) return { level: 'good', label: 'جيد', icon: '✅', cssClass: 'good' };
+                if (pct >= 60) return { level: 'satisfactory', label: 'مقبول', icon: '🟡', cssClass: 'satisfactory' };
+                if (pct >= 50) return { level: 'needs-support', label: 'يحتاج دعم', icon: '⚠️', cssClass: 'warning' };
+                return { level: 'critical', label: 'حرج', icon: '🚨', cssClass: 'critical' };
+            }
+            
+            getAttendanceLevel() {
+                const pct = this.analysis.attendancePercent;
+                if (pct >= 95) return { level: 'excellent', label: 'ممتاز', icon: '🌟' };
+                if (pct >= 85) return { level: 'good', label: 'جيد', icon: '✅' };
+                if (pct >= 75) return { level: 'moderate', label: 'متوسط', icon: '⚠️' };
+                return { level: 'poor', label: 'ضعيف', icon: '🚨' };
+            }
+            
+            compareWithClass(subjectName) {
+                const subjectData = this.analysis.subjects[subjectName];
+                if (!subjectData) return null;
+                
+                const classAvg = this.classAverages[subjectName];
+                if (classAvg === undefined) return null;
+                
+                const studentPercent = subjectData.percentage;
+                const classPercent = (classAvg / this.maxGrade) * 100;
+                const diff = studentPercent - classPercent;
+                
+                if (diff >= 15) return { status: 'above', label: 'أعلى بكثير', icon: '📈', diff: diff.toFixed(1) };
+                if (diff >= 5) return { status: 'above', label: 'أعلى', icon: '⬆️', diff: diff.toFixed(1) };
+                if (diff >= -5) return { status: 'average', label: 'متوسط', icon: '➡️', diff: diff.toFixed(1) };
+                if (diff >= -15) return { status: 'below', label: 'أقل', icon: '⬇️', diff: diff.toFixed(1) };
+                return { status: 'below', label: 'أقل بكثير', icon: '📉', diff: diff.toFixed(1) };
+            }
+            
+            generateFullHTML() {
+                if (!this.analysis.hasScores) {
+                    return `<div class="report-empty">
+                        <i class="fas fa-info-circle"></i>
+                        <p>لا توجد درجات مسجلة حتى الآن. سيتم إنشاء التقرير عند توفر البيانات.</p>
+                    </div>`;
+                }
+                
+                let html = '<div class="comprehensive-report">';
+                
+                // Section 1: General Evaluation
+                html += this.generateGeneralEvaluation();
+                
+                // Section 2: Performance Analysis vs Class
+                html += this.generateClassComparison();
+                
+                // Section 3: Strengths
+                html += this.generateStrengthsSection();
+                
+                // Section 4: Areas for Improvement
+                html += this.generateImprovementSection();
+                
+                // Section 5: Action Plan
+                html += this.generateActionPlan();
+                
+                // Section 6: Stage-appropriate Strategies
+                html += this.generateStrategiesSection();
+                
+                // Section 7: Guidance for Teachers & Parents
+                html += this.generateGuidanceSection();
+                
+                // Section 8: Motivational Conclusion
+                html += this.generateMotivationSection();
+                
+                html += '</div>';
+                return html;
+            }
+            
+            generateGeneralEvaluation() {
+                const perf = this.getPerformanceLevel();
+                const att = this.getAttendanceLevel();
+                const a = this.analysis;
+                
+                // Calculate class rank if we have class averages
+                let classPosition = '';
+                const subjectsWithClass = Object.keys(this.classAverages).length;
+                if (subjectsWithClass > 0) {
+                    let aboveCount = 0;
+                    let belowCount = 0;
+                    for (const subject in this.analysis.subjects) {
+                        const comp = this.compareWithClass(subject);
+                        if (comp && comp.status === 'above') aboveCount++;
+                        if (comp && comp.status === 'below') belowCount++;
+                    }
+                    if (aboveCount > belowCount) {
+                        classPosition = '<span class="position-badge above">أعلى من متوسط الفصل</span>';
+                    } else if (belowCount > aboveCount) {
+                        classPosition = '<span class="position-badge below">أقل من متوسط الفصل</span>';
+                    } else {
+                        classPosition = '<span class="position-badge average">عند متوسط الفصل</span>';
+                    }
+                }
+                
+                return `
+                    <div class="report-section general-evaluation">
+                        <div class="section-header">
+                            <i class="fas fa-chart-pie"></i>
+                            <h3>1️⃣ التقييم العام</h3>
+                        </div>
+                        <div class="eval-cards">
+                            <div class="eval-card ${perf.cssClass}">
+                                <div class="eval-icon">${perf.icon}</div>
+                                <div class="eval-label">المستوى العام</div>
+                                <div class="eval-value">${perf.label}</div>
+                            </div>
+                            <div class="eval-card">
+                                <div class="eval-icon">📊</div>
+                                <div class="eval-label">المعدل العام</div>
+                                <div class="eval-value">${a.overallAvg.toFixed(1)}/${this.maxGrade} (${a.overallPercentage.toFixed(0)}%)</div>
+                            </div>
+                            <div class="eval-card ${att.level === 'excellent' || att.level === 'good' ? 'good' : 'warning'}">
+                                <div class="eval-icon">${att.icon}</div>
+                                <div class="eval-label">نسبة الحضور</div>
+                                <div class="eval-value">${att.label} (${a.attendancePercent.toFixed(0)}%)</div>
+                            </div>
+                        </div>
+                        <div class="eval-impact">
+                            <strong>📌 تأثير الحضور:</strong> ${a.attendancePercent >= 90 ? 'الحضور المنتظم أثر إيجابياً على مستواك الدراسي' : 'تحسين الحضور سيساهم في تحسين درجاتك' }
+                        </div>
+                        ${classPosition ? `<div class="eval-position">${classPosition}</div>` : ''}
+                    </div>
+                `;
+            }
+            
+            generateClassComparison() {
+                const a = this.analysis;
+                if (Object.keys(this.classAverages).length === 0) {
+                    return '';
+                }
+                
+                let aboveSubjects = [];
+                let averageSubjects = [];
+                let belowSubjects = [];
+                
+                for (const subject in a.subjects) {
+                    const comp = this.compareWithClass(subject);
+                    if (comp) {
+                        if (comp.status === 'above') {
+                            aboveSubjects.push({ ...a.subjects[subject], comparison: comp });
+                        } else if (comp.status === 'below') {
+                            belowSubjects.push({ ...a.subjects[subject], comparison: comp });
+                        } else {
+                            averageSubjects.push({ ...a.subjects[subject], comparison: comp });
+                        }
+                    }
+                }
+                
+                let html = `
+                    <div class="report-section class-comparison">
+                        <div class="section-header">
+                            <i class="fas fa-users"></i>
+                            <h3>2️⃣ تحليل الأداء مقارنة بالفصل</h3>
+                        </div>
+                `;
+                
+                if (aboveSubjects.length > 0) {
+                    html += `<div class="comparison-group success">
+                        <h4><i class="fas fa-arrow-up"></i> مواد تتفوق فيها على زملائك</h4>
+                        <div class="subject-list">
+                            ${aboveSubjects.map(s => `
+                                <div class="subject-item">
+                                    <span class="subject-name">${escapeHtml(s.name)}</span>
+                                    <span class="subject-diff positive">+${s.comparison.diff}%</span>
+                                    <span class="subject-status">${s.comparison.label}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>`;
+                }
+                
+                if (averageSubjects.length > 0) {
+                    html += `<div class="comparison-group warning">
+                        <h4><i class="fas fa-minus"></i> مواد قريبة من متوسط الفصل</h4>
+                        <div class="subject-list">
+                            ${averageSubjects.map(s => `
+                                <div class="subject-item">
+                                    <span class="subject-name">${escapeHtml(s.name)}</span>
+                                    <span class="subject-diff neutral">${s.comparison.diff}%</span>
+                                    <span class="subject-status">${s.comparison.label}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>`;
+                }
+                
+                if (belowSubjects.length > 0) {
+                    html += `<div class="comparison-group danger">
+                        <h4><i class="fas fa-arrow-down"></i> مواد أقل من المتوسط</h4>
+                        <div class="subject-list">
+                            ${belowSubjects.map(s => `
+                                <div class="subject-item">
+                                    <span class="subject-name">${escapeHtml(s.name)}</span>
+                                    <span class="subject-diff negative">${s.comparison.diff}%</span>
+                                    <span class="subject-status">${s.comparison.label}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>`;
+                }
+                
+                html += '</div>';
+                return html;
+            }
+            
+            generateStrengthsSection() {
+                const a = this.analysis;
+                if (a.strongSubjects.length === 0 && a.improvingSubjects.length === 0) {
+                    return '';
+                }
+                
+                let html = `
+                    <div class="report-section strengths-section">
+                        <div class="section-header">
+                            <i class="fas fa-star"></i>
+                            <h3>3️⃣ نقاط القوة والتميز</h3>
+                        </div>
+                        <div class="strengths-list">
+                `;
+                
+                a.strongSubjects.forEach(s => {
+                    const trendIcon = s.trend.trend === 'improving' ? '📈' : (s.trend.consistency === 'consistent' ? '💪' : '⭐');
+                    const reason = s.trend.hasImprovement ? 'لتحسنك المستمر' : 
+                                   (s.trend.consistency === 'consistent' ? 'لانتظام مستواك' : 'لأدائك المتميز');
+                    html += `
+                        <div class="strength-item">
+                            <div class="strength-header">
+                                <span class="strength-icon">${trendIcon}</span>
+                                <span class="strength-name">${escapeHtml(s.name)}</span>
+                                <span class="strength-score">${s.average.toFixed(1)}/${this.maxGrade}</span>
+                            </div>
+                            <div class="strength-reason">${reason} في هذه المادة</div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div><div class="encouragement">🎉 أستمر على هذا المستوى المتميز!</div></div>';
+                return html;
+            }
+            
+            generateImprovementSection() {
+                const a = this.analysis;
+                if (a.weakSubjects.length === 0 && a.moderateSubjects.length === 0) {
+                    return `
+                        <div class="report-section improvement-section">
+                            <div class="section-header">
+                                <i class="fas fa-check-circle"></i>
+                                <h3>4️⃣ المجالات التي تحتاج تطوير</h3>
+                            </div>
+                            <div class="no-improvements">
+                                <p>ممتاز! لا توجد مجالات تحتاج تطوير حالياً.</p>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                let html = `
+                    <div class="report-section improvement-section">
+                        <div class="section-header">
+                            <i class="fas fa-arrow-trend-up"></i>
+                            <h3>4️⃣ المجالات التي تحتاج تطوير</h3>
+                        </div>
+                        <div class="improvement-list">
+                `;
+                
+                a.weakSubjects.forEach(s => {
+                    const trendIcon = s.trend.hasImprovement ? '📈' : (s.trend.hasDeterioration ? '📉' : '⚠️');
+                    let factors = [];
+                    if (this.analysis.attendancePercent < 90) factors.push('الحضور');
+                    if (s.trend.consistency === 'inconsistent') factors.push('التدريب');
+                    
+                    html += `
+                        <div class="improvement-item">
+                            <div class="improvement-header">
+                                <span class="improvement-icon">${trendIcon}</span>
+                                <span class="improvement-name">${escapeHtml(s.name)}</span>
+                                <span class="improvement-score">${s.average.toFixed(1)}/${this.maxGrade}</span>
+                            </div>
+                            ${factors.length > 0 ? `<div class="improvement-factors">عوامل مؤثرة: ${factors.join('، ')}</div>` : ''}
+                        </div>
+                    `;
+                });
+                
+                a.moderateSubjects.forEach(s => {
+                    const gap = (this.thresholds.safeThreshold - s.average).toFixed(1);
+                    html += `
+                        <div class="improvement-item moderate">
+                            <div class="improvement-header">
+                                <span class="improvement-icon">⚡</span>
+                                <span class="improvement-name">${escapeHtml(s.name)}</span>
+                                <span class="improvement-score">${s.average.toFixed(1)}/${this.maxGrade}</span>
+                            </div>
+                            <div class="improvement-gap">الفجوة للوصول للأمان: ${gap} درجات</div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div></div>';
+                return html;
+            }
+            
+            generateActionPlan() {
+                const a = this.analysis;
+                const perf = this.getPerformanceLevel();
+                
+                if (perf.level === 'excellent' || perf.level === 'very-good') {
+                    return '';
+                }
+                
+                // Determine priorities
+                let priorities = [];
+                if (a.weakSubjects.length > 0) {
+                    priorities = a.weakSubjects.slice(0, 3).map(s => s.name);
+                } else if (a.moderateSubjects.length > 0) {
+                    priorities = a.moderateSubjects.slice(0, 3).map(s => s.name);
+                }
+                
+                // Study time recommendations by stage
+                let studyTime = '';
+                if (this.educationalStage.includes('ابتدائي')) {
+                    studyTime = 'نصف ساعة إلى ساعة يومياً';
+                } else if (this.educationalStage === 'متوسط') {
+                    studyTime = 'ساعة إلى ساعتين يومياً';
+                } else if (this.educationalStage === 'إعدادي') {
+                    studyTime = 'ساعتين إلى ثلاث ساعات يومياً';
+                } else {
+                    studyTime = 'ثلاث إلى أربع ساعات يومياً';
+                }
+                
+                // Short-term goals
+                let goals = [];
+                if (a.weakSubjects.length > 0) {
+                    goals.push(`تحسين درجة ${a.weakSubjects[0].name} بمقدار ${(this.thresholds.passThreshold - a.weakSubjects[0].average + 5).toFixed(0)} درجات`);
+                }
+                goals.push(`الحفاظ على نسبة حضور أعلى من 90%`);
+                goals.push(`مراجعة دورية للمواد أسبوعياً`);
+                
+                return `
+                    <div class="report-section action-plan">
+                        <div class="section-header">
+                            <i class="fas fa-clipboard-check"></i>
+                            <h3>5️⃣ خطة عمل مخصصة</h3>
+                        </div>
+                        <div class="plan-content">
+                            <div class="plan-section">
+                                <h4><i class="fas fa-bullseye"></i> الأولويات</h4>
+                                <ul class="plan-list">
+                                    ${priorities.length > 0 ? `<li>التركيز على: ${priorities.join('، ')}</li>` : '<li>الاستمرار في الأداء المتميز</li>'}
+                                </ul>
+                            </div>
+                            <div class="plan-section">
+                                <h4><i class="fas fa-clock"></i> وقت المذاكرة المناسب</h4>
+                                <p class="study-time">${studyTime}</p>
+                            </div>
+                            <div class="plan-section">
+                                <h4><i class="fas fa-tasks"></i> الأهداف قصيرة المدى</h4>
+                                <ul class="goals-list">
+                                    ${goals.map(g => `<li>${g}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            generateStrategiesSection() {
+                const stage = this.educationalStage;
+                
+                let strategies = [];
+                let stageName = '';
+                
+                if (stage.includes('ابتدائي')) {
+                    stageName = 'المرحلة الابتدائية';
+                    strategies = [
+                        '<strong>تعلم باللعب:</strong> استخدام ألعاب تعليمية وتطبيقات تفاعلية',
+                        '<strong>التكرار:</strong> مراجعة الدروس بشكل متكرر وبسيط',
+                        '<strong>التحفيز:</strong> وضع أهداف صغيرة ومكافآت عند تحقيقها',
+                        '<strong>المساعدة:</strong> طلب مساعدة المعلم أو الأهل عند الحاجة'
+                    ];
+                } else if (stage === 'متوسط') {
+                    stageName = 'المرحلة المتوسطة';
+                    strategies = [
+                        '<strong>تنظيم الوقت:</strong> وضع جدول مذاكرة منتظم',
+                        '<strong>التمارين:</strong> حل تمارين إضافية بعد كل درس',
+                        '<strong>المتابعة:</strong> مراجعة الدروس مع الأهل أسبوعياً',
+                        '<strong>الفهم:</strong> التركيز على فهم المفاهيم وليس الحفظ'
+                    ];
+                } else if (stage === 'إعدادي') {
+                    stageName = 'المرحلة الإعدادية';
+                    strategies = [
+                        '<strong>الفهم التحليلي:</strong> تحليل الأسئلة وفهم المطلوب',
+                        '<strong>حل الأسئلة:</strong> التدرب على أسئلة السنوات السابقة',
+                        '<strong>تقوية الأساس:</strong> مراجعة الأساسيات قبل التقدم',
+                        '<strong>الملاحظات:</strong> تدوين ملاحظات واضحة للمراجعة'
+                    ];
+                } else {
+                    stageName = 'المرحلة الثانوية';
+                    strategies = [
+                        '<strong>التخطيط:</strong> وضع خطة دراسية شاملة للفصل',
+                        '<strong>الاختبارات التجريبية:</strong> إجراء اختبارات تجريبية منتظمة',
+                        '<strong>إدارة الضغط:</strong> técnicas للتنظيم وتجنب الضغط',
+                        '<strong>المراجعة:</strong> مراجعة شاملة قبل الاختبارات'
+                    ];
+                }
+                
+                return `
+                    <div class="report-section strategies-section">
+                        <div class="section-header">
+                            <i class="fas fa-chess"></i>
+                            <h3>6️⃣ استراتيجيات مناسبة لـ ${stageName}</h3>
+                        </div>
+                        <div class="strategies-list">
+                            ${strategies.map(s => `<div class="strategy-item"><i class="fas fa-check"></i> ${s}</div>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            generateGuidanceSection() {
+                const stage = this.educationalStage;
+                
+                let parentRole = '';
+                let teacherRole = '';
+                
+                if (stage.includes('ابتدائي')) {
+                    parentRole = 'مرافقة مستمرة وتهيئة بيئة هادئة للدراسة، استخدام التحفيز والمكافآت الصغيرة'
+                } else if (stage === 'متوسط') {
+                    parentRole = 'متابعة يومية منتظمة، التحقق من الواجبات، تشجيع الاستقلالية'
+                } else if (stage === 'إعدادي') {
+                    parentRole = 'توفير الدعم والتشجيع، مناقشة التحديات، منح الاستقلالية مع المتابعة'
+                } else {
+                    parentRole = 'توفير بيئة مناسبة للدراسة، الدعم النفسي والتشجيع، احترام الخصوصية'
+                }
+                
+                return `
+                    <div class="report-section guidance-section">
+                        <div class="section-header">
+                            <i class="fas fa-hands-helping"></i>
+                            <h3>7️⃣ توجيهات للمعلمين وأولياء الأمور</h3>
+                        </div>
+                        <div class="guidance-content">
+                            <div class="guidance-card">
+                                <h4><i class="fas fa-user-tie"></i> دور المعلمين</h4>
+                                <ul>
+                                    <li>متابعة تقدم الطالب بشكل مستمر</li>
+                                    <li>توفير تغذية راجعة إيجابية وتشجيعية</li>
+                                    <li>مساعدة الطالب في تحديد نقاط القوة والضعف</li>
+                                    <li>توفير فرص إضافية للممارسة والتحسين</li>
+                                </ul>
+                            </div>
+                            <div class="guidance-card">
+                                <h4><i class="fas fa-user-friends"></i> دور أولياء الأمور</h4>
+                                <ul>
+                                    <li>${parentRole}</li>
+                                    <li>الاهتمام بالحضور والانضباط المدرسي</li>
+                                    <li>توفير بيئة دراسية مناسبة في المنزل</li>
+                                    <li>التواصل المستمر مع المعلمين</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            generateMotivationSection() {
+                const perf = this.getPerformanceLevel();
+                const stage = this.educationalStage;
+                
+                let message = '';
+                let ageGroup = '';
+                
+                if (stage.includes('ابتدائي')) {
+                    ageGroup = 'نجم المستقبل';
+                    if (perf.level === 'excellent') {
+                        message = 'أنت نجم متألق! كل خطوة تخطوها تجعلك أفضل. استمر في الاجتهاد، فالمستقبل الواعد ينتظرك!';
+                    } else if (perf.level === 'very-good') {
+                        message = 'عمل رائع! أنت على الطريق الصحيح. استمر في الاجتهاد، وستصل للقمة!';
+                    } else if (perf.level === 'good') {
+                        message = 'ممتاز! حاول زيادة جهدك قليلاً، وستصل للتفوق الذي تستحقه!';
+                    } else {
+                        message = 'لا تستسلم! كل محاولة جديدة هي خطوة نحو النجاح. أصدقاؤك والمعلمون معك!';
+                    }
+                } else if (stage === 'متوسط') {
+                    ageGroup = 'بطل المرحلة';
+                    if (perf.level === 'excellent') {
+                        message = 'تستحق كل التقدير! تفوقك مبهر. استمر بنفس الهمة، فأنت تبني مستقبلك بيديك!';
+                    } else if (perf.level === 'very-good') {
+                        message = 'أداء متميز! اجتهادك ملحوظ. مع استمرار努力، ستصل للقمّة!';
+                    } else if (perf.level === 'good') {
+                        message = 'أنت على الطريق الصحيح! كل يوم هو فرصة جديدة للتميز. حاول التركيز أكثر!';
+                    } else {
+                        message = 'تستطيع تحقيق الكثير! البداية متأخرة أفضل من عدم البدء. ابدأ اليوم!';
+                    }
+                } else if (stage === 'إعدادي') {
+                    ageGroup = 'طموح المستقبل';
+                    if (perf.level === 'excellent') {
+                        message = 'تفوقك استثنائي! هذا результаج اجتهادك. فخور بك وبإنجازاتك المميزة!';
+                    } else if (perf.level === 'very-good') {
+                        message = 'أداء رائع! أنت تبني أساساً قوياً لمستقبلك. استمر بالتقدم!';
+                    } else if (perf.level === 'good') {
+                        message = 'أنت في الطريق الصحيح! كل خطوة تقرّبك من أهدافك. ركّز واستمر!';
+                    } else {
+                        message = 'المستقبل أمامك! لا تتردد في طلب المساعدة. مع الجهد المستمر، ستنجح!';
+                    }
+                } else {
+                    ageGroup = 'قائد الغد';
+                    if (perf.level === 'excellent') {
+                        message = 'مستواك مذهل! أنت على أتمّ الاستعداد للمرحلة القادمة. فخور بإنجازاتك!';
+                    } else if (perf.level === 'very-good') {
+                        message = 'عمل رائع! اجتهادك سيؤتي ثماره. استمر في التحدي والتطور!';
+                    } else if (perf.level === 'good') {
+                        message = 'أنت قادر على المزيد! استثمر وقتك وطاقتك بشكل أفضل، وستصل للتميز!';
+                    } else {
+                        message = 'لا تنيأس! كل تحدٍّ هو فرصة للنمو. ابدأ من الآن، والإصرار هو مفتاح النجاح!';
+                    }
+                }
+                
+                return `
+                    <div class="report-section motivation-section">
+                        <div class="section-header">
+                            <i class="fas fa-heart"></i>
+                            <h3>8️⃣ خلاصة تحفيزية</h3>
+                        </div>
+                        <div class="motivation-content">
+                            <div class="motivation-badge">${ageGroup}</div>
+                            <div class="motivation-message">${message}</div>
+                            <div class="motivation-focus">
+                                <i class="fas fa-lightbulb"></i>
+                                تذكّر: <strong>التطور</strong> أهم من المقارنة. أنت الأفضل عندما تكون أفضل من نفسك yesterday!
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        // Helper function to get max grade for a student based on their grade level
+        function getMaxGradeForStudent(student) {
+            if (!student || !student.grade) return 100;
+            
+            const grade = student.grade;
+            const gradeParts = grade.split(' - ');
+            if (gradeParts.length < 2) return 100;
+            
+            const educationalLevel = gradeParts[0].trim();
+            const gradeLevel = gradeParts[1].trim();
+            
+            const isElementary = educationalLevel.includes('ابتدائي') || 
+                                 gradeLevel.includes('ابتدائي') || 
+                                 gradeLevel.includes('الابتدائي');
+            
+            if (isElementary) {
+                const isGrades1to4 = gradeLevel.includes('الأول') || gradeLevel.includes('الثاني') || 
+                                     gradeLevel.includes('الثالث') || gradeLevel.includes('الرابع') ||
+                                     gradeLevel.includes('اول') || gradeLevel.includes('ثاني') || 
+                                     gradeLevel.includes('ثالث') || gradeLevel.includes('رابع') ||
+                                     gradeLevel.includes('الاول');
+                
+                const isGrades5or6 = gradeLevel.includes('الخامس') || gradeLevel.includes('السادس') ||
+                                     gradeLevel.includes('خامس') || gradeLevel.includes('سادس');
+                
+                if (isGrades1to4 && !isGrades5or6) {
+                    return 10;
+                }
+            }
+            
+            return 100;
+        }
+        
+        // Helper function to get grade thresholds for a student
+        function getThresholdsForStudent(student) {
+            const maxGrade = getMaxGradeForStudent(student);
+            return maxGrade === 10 ? GRADE_THRESHOLDS.scale10 : GRADE_THRESHOLDS.scale100;
+        }
+        
+        // Helper function to safely parse JSON
+        function parseJSON(str) {
+            try {
+                if (typeof str === 'object' && str !== null) return str;
+                return JSON.parse(str || '{}');
+            } catch {
+                return {};
+            }
+        }
+        
+        // Load and display comprehensive report
+        async function loadComprehensiveReport() {
+            const container = document.getElementById('comprehensiveReportContainer');
+            if (!container) return;
+            
+            if (!currentStudent) {
+                container.innerHTML = '<div class="report-error"><p>يرجى تسجيل الدخول أولاً</p></div>';
+                return;
+            }
+            
+            try {
+                // Get class averages for comparison
+                let classAverages = {};
+                const gradeLevel = currentStudent.grade || '';
+                
+                try {
+                    const response = await fetch(`/api/school/${currentStudent.school_id}/class-averages?grade=${encodeURIComponent(gradeLevel)}`);
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result.success) {
+                            classAverages = result.averages || {};
+                        }
+                    }
+                } catch (e) {
+                    console.log('Class averages not available');
+                }
+                
+                const thresholds = getThresholdsForStudent(currentStudent);
+                const maxGrade = thresholds.maxGrade;
+                const detailedScores = parseJSON(currentStudent.detailed_scores);
+                const dailyAttendance = parseJSON(currentStudent.daily_attendance);
+                
+                if (Object.keys(detailedScores).length === 0) {
+                    container.innerHTML = '<div class="report-empty"><i class="fas fa-info-circle"></i><p>لا توجد درجات مسجلة حتى الآن. سيتم إنشاء التقرير عند توفر البيانات.</p></div>';
+                    return;
+                }
+                
+                const report = new ComprehensiveEducationalReport(
+                    currentStudent,
+                    detailedScores,
+                    dailyAttendance,
+                    classAverages,
+                    maxGrade,
+                    thresholds
+                );
+                
+                container.innerHTML = report.generateFullHTML();
+                
+            } catch (error) {
+                console.error('Error loading report:', error);
+                container.innerHTML = '<div class="report-error"><p>حدث خطأ في تحميل التقرير</p></div>';
+            }
+        }
+    </script>
+    <script src="assets/js/loading-feedback.js"></script>
+</body>
+</html>
