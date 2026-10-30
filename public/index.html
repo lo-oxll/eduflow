@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduFlow - نظام إدارة المدارس المتكامل</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/unified-design-system.css">
+  <link rel="stylesheet" href="assets/css/unified-components.css">
+  <link rel="stylesheet" href="assets/css/responsive-utilities.css">
+  <link rel="stylesheet" href="assets/css/accessibility-enhancements.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/enhanced.css">
+  <link rel="stylesheet" href="assets/css/design-system.css">
+    <script src="assets/js/security-utils.js"></script>
+</head>
+<body>
+  <!-- Skip to main content link -->
+  <a href="#main-content" class="skip-link">تخطي إلى المحتوى الرئيسي</a>
+  
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+          <h1>EduFlow</h1>
+        </div>
+        <div class="nav-links">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section id="home" class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <h2><span class="emoji-icon">🎓</span> <span class="text-gradient">EduFlow</span></h2>
+          <p class="subtitle">نظام إدارة المدارس المتكامل</p>
+          <p class="subtitle">منصة شاملة لإدارة المدارس والطلاب والدرجات والحضور بطريقة حديثة وآمنة</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="role-selection" aria-labelledby="role-selection-heading">
+      <div class="container">
+        <div class="section-title">
+          <h3 id="role-selection-heading">اختر نوع الحساب</h3>
+          <p>قم بتسجيل الدخول حسب نوع حسابك للوصول إلى الأدوات المناسبة</p>
+        </div>
+        
+        <div class="roles-grid grid-container grid-auto-fit" role="group" aria-label="نوع الحساب">
+          <div class="role-card admin animate-fade-in card-hover-effect" role="button" tabindex="0" aria-label="مدير النظام - إدارة شاملة للنظام" onclick="showAdminLogin()" onkeydown="if(event.key === 'Enter' || event.key === ' ') { showAdminLogin(); event.preventDefault(); }">
+            <div class="role-icon">
+              <i class="fas fa-user-shield" aria-hidden="true"></i>
+            </div>
+            <h4>مدير النظام</h4>
+            <p>إدارة شاملة للنظام، إضافة المدارس، مراقبة الإحصائيات العامة والتحكم في الصلاحيات</p>
+            <button class="btn btn-primary" aria-hidden="true">
+              <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+              دخول المدير
+            </button>
+          </div>
+
+          <div class="role-card school animate-fade-in card-hover-effect">
+            <div class="role-icon">
+              <i class="fas fa-school"></i>
+            </div>
+            <h4>إدارة المدرسة</h4>
+            <p>إدارة الطلاب، المواد الدراسية، الدرجات، الحضور وجميع العمليات التعليمية اليومية</p>
+            <button class="btn btn-primary" onclick="showSchoolLogin()">
+              <i class="fas fa-sign-in-alt"></i>
+              دخول المدرسة
+            </button>
+          </div>
+
+          <div class="role-card teacher animate-fade-in card-hover-effect">
+            <div class="role-icon">
+              <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+            <h4>المعلم</h4>
+            <p>إدارة الدرجات، تسجيل الحضور، ومتابعة الطلاب في المواد التي يقوم بتدريسها</p>
+            <button class="btn btn-primary" onclick="showTeacherLogin()">
+              <i class="fas fa-sign-in-alt"></i>
+              دخول المعلم
+            </button>
+          </div>
+
+          <div class="role-card student animate-fade-in card-hover-effect">
+            <div class="role-icon">
+              <i class="fas fa-user-graduate"></i>
+            </div>
+            <h4>الطالب</h4>
+            <p>عرض الدرجات، متابعة الحضور، الاطلاع على المعلومات الشخصية والتقارير الدراسية</p>
+            <button class="btn btn-primary" onclick="showStudentLogin()">
+              <i class="fas fa-sign-in-alt"></i>
+              دخول الطالب
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Admin Login Modal -->
+  <div id="adminLoginModal" class="modal" role="dialog" aria-labelledby="adminLoginTitle" aria-describedby="adminLoginDesc" aria-modal="true" tabindex="-1">
+    <div class="modal-content" role="document">
+      <span class="close-modal" onclick="closeModal('adminLoginModal')" aria-label="إغلاق النافذة" tabindex="0" onkeydown="if(event.key === 'Enter' || event.key === ' ') { closeModal('adminLoginModal'); event.preventDefault(); }">&times;</span>
+      <h3 class="modal-title" id="adminLoginTitle">تسجيل الدخول كمسؤول</h3>
+      <p id="adminLoginDesc" class="sr-only">أدخل بيانات تسجيل الدخول الخاصة بك للوصول إلى لوحة تحكم المدير</p>
+      <form id="adminLoginForm" aria-label="نموذج تسجيل دخول المدير">
+        <div class="form-group">
+          <label for="adminUsername" class="form-label">اسم المستخدم</label>
+          <input type="text" id="adminUsername" class="form-control" required aria-required="true">
+        </div>
+        <div class="form-group">
+          <label for="adminPassword" class="form-label">كلمة المرور</label>
+          <input type="password" id="adminPassword" class="form-control" required aria-required="true">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%">دخول</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- School Login Modal -->
+  <div id="schoolLoginModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal('schoolLoginModal')">&times;</span>
+      <h3 class="modal-title">تسجيل الدخول كمدرسة</h3>
+      <form id="schoolLoginForm">
+        <div class="form-group">
+          <label for="schoolCode">رمز المدرسة</label>
+          <input type="text" id="schoolCode" class="form-control" autocomplete="username" required>
+        </div>
+        <div class="form-group">
+          <label for="schoolPassword">كلمة المرور</label>
+          <input type="password" id="schoolPassword" class="form-control" autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%">دخول</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Student Login Modal -->
+  <div id="studentLoginModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal('studentLoginModal')">&times;</span>
+      <h3 class="modal-title">تسجيل الدخول كطالب</h3>
+      <form id="studentLoginForm">
+        <div class="form-group">
+          <label for="studentCode">رمز الطالب</label>
+          <input type="text" id="studentCode" class="form-control" autocomplete="username" required>
+        </div>
+        <div class="form-group">
+          <label for="studentPassword">كلمة المرور</label>
+          <input type="password" id="studentPassword" class="form-control" autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%">دخول</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Teacher Login Modal -->
+  <div id="teacherLoginModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal('teacherLoginModal')">&times;</span>
+      <h3 class="modal-title">تسجيل الدخول كمعلم</h3>
+      <form id="teacherLoginForm">
+        <div class="form-group">
+          <label for="teacherCode">رمز المعلم</label>
+          <input type="text" id="teacherCode" class="form-control" autocomplete="username" required>
+        </div>
+        <div class="form-group">
+          <label for="teacherPassword">كلمة المرور</label>
+          <input type="password" id="teacherPassword" class="form-control" autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%">دخول</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // وظائف إدارة النوافذ المنبثقة
+    function showAdminLogin() {
+      document.getElementById('adminLoginModal').style.display = 'flex';
+    }
+
+    function showSchoolLogin() {
+      document.getElementById('schoolLoginModal').style.display = 'flex';
+    }
+
+    function showStudentLogin() {
+      document.getElementById('studentLoginModal').style.display = 'flex';
+    }
+
+    function showTeacherLogin() {
+      document.getElementById('teacherLoginModal').style.display = 'flex';
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+
+    // إغلاق النافذة عند النقر خارجها
+    window.onclick = function(event) {
+      const modals = document.getElementsByClassName('modal');
+      for (let i = 0; i < modals.length; i++) {
+        if (event.target == modals[i]) {
+          modals[i].style.display = "none";
+        }
+      }
+    }
+
+    // معالجة نموذج تسجيل الدخول للمسؤول
+    document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const username = document.getElementById('adminUsername').value;
+      const password = document.getElementById('adminPassword').value;
+      
+      try {
+        const response = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password })
+        });
+        
+        if (!response.ok) {
+          const errorResult = await response.json();
+          throw new Error(errorResult.error || 'فشل تسجيل الدخول');
+        }
+        
+        const result = await response.json();
+        // Store token and user info
+        localStorage.setItem('token', result.token);
+        localStorage.setItem('user', JSON.stringify(result.user));
+        
+        toastManager.showSuccess('تم تسجيل الدخول بنجاح!');
+        closeModal('adminLoginModal');
+        
+        // Redirect to admin dashboard
+        window.location.href = '/admin-dashboard.html';
+      } catch (error) {
+        console.error('Login error:', error);
+        toastManager.showError(error.message || 'حدث خطأ في الاتصال بالخادم');
+      }
+    });
+
+    // معالجة نموذج تسجيل الدخول للمدرسة
+    document.getElementById('schoolLoginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const code = document.getElementById('schoolCode').value;
+      const password = document.getElementById('schoolPassword').value;
+      
+      try {
+        const response = await fetch('/api/school/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ code, password })
+        });
+        
+        if (!response.ok) {
+          const errorResult = await response.json();
+          throw new Error(errorResult.error || 'فشل تسجيل الدخول');
+        }
+        
+        const result = await response.json();
+        // Store token and school info
+        localStorage.setItem('token', result.token);
+        localStorage.setItem('school', JSON.stringify(result.school));
+        
+        toastManager.showSuccess('تم تسجيل الدخول بنجاح!');
+        closeModal('schoolLoginModal');
+        
+        // Redirect to school dashboard
+        window.location.href = '/school-dashboard.html';
+      } catch (error) {
+        console.error('Login error:', error);
+        toastManager.showError(error.message || 'حدث خطأ في الاتصال بالخادم');
+      }
+    });
+
+    // معالجة نموذج تسجيل الدخول للطالب
+    document.getElementById('studentLoginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const code = document.getElementById('studentCode').value;
+      const password = document.getElementById('studentPassword').value;
+      
+      try {
+        const response = await fetch('/api/student/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ code, password })
+        });
+        
+        if (!response.ok) {
+          const errorResult = await response.json();
+          throw new Error(errorResult.error || 'فشل تسجيل الدخول');
+        }
+        
+        const result = await response.json();
+        // Store token and student info
+        localStorage.setItem('token', result.token);
+        localStorage.setItem('student', JSON.stringify(result.student));
+        
+        toastManager.showSuccess('تم تسجيل الدخول بنجاح!');
+        closeModal('studentLoginModal');
+        
+        // Redirect to student portal
+        window.location.href = '/student-portal.html';
+      } catch (error) {
+        console.error('Login error:', error);
+        toastManager.showError(error.message || 'حدث خطأ في الاتصال بالخادم');
+      }
+    });
+
+    // معالجة نموذج تسجيل الدخول للمعلم
+    document.getElementById('teacherLoginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const code = document.getElementById('teacherCode').value;
+      const password = document.getElementById('teacherPassword').value;
+      
+      try {
+        const response = await fetch('/api/teacher/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ teacher_code: code, password })
+        });
+        
+        if (!response.ok) {
+          const errorResult = await response.json();
+          throw new Error(errorResult.error || 'فشل تسجيل الدخول');
+        }
+        
+        const result = await response.json();
+        // Store token and teacher info
+        localStorage.setItem('teacher_token', result.token);
+        localStorage.setItem('teacher', JSON.stringify(result.teacher));
+        
+        toastManager.showSuccess('تم تسجيل الدخول بنجاح!');
+        closeModal('teacherLoginModal');
+        
+        // Redirect to teacher portal
+        window.location.href = '/teacher-portal.html';
+      } catch (error) {
+        console.error('Login error:', error);
+        toastManager.showError(error.message || 'حدث خطأ في الاتصال بالخادم');
+      }
+    });
+  </script>
+  <script src="assets/js/loading-feedback.js"></script>
+</body>
+</html>

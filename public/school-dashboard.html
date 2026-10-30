@@ -1,0 +1,2150 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم المدرسة - EduFlow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/unified-design-system.css">
+    <link rel="stylesheet" href="assets/css/unified-components.css">
+    <link rel="stylesheet" href="assets/css/responsive-utilities.css">
+    <link rel="stylesheet" href="assets/css/accessibility-enhancements.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/enhanced.css">
+    <link rel="stylesheet" href="assets/css/design-system.css">
+
+    
+    <!-- Responsive CSS for school dashboard -->
+    <style>
+        /* Ensure proper responsive behavior */
+        .dashboard-header {
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 1rem;
+        }
+        
+        .dashboard-title {
+            flex: 1;
+            min-width: 250px;
+            margin: 0;
+        }
+        
+        /* Performance indicators responsive layout */
+        .performance-indicators {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .indicator-card {
+            min-width: 120px;
+            padding: 1rem;
+        }
+        
+        .indicator-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .indicator-label {
+            font-size: 0.9rem;
+        }
+        
+        /* Charts container responsive layout */
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .chart-wrapper {
+            min-height: 250px;
+            position: relative;
+        }
+        
+        /* AI Predictions responsive layout */
+        .predictions-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .prediction-card {
+            padding: 1rem;
+        }
+        
+        .prediction-card h4 {
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        /* Grade levels container responsive improvements */
+        #gradeLevelsContainer .grades-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .grade-card {
+            min-width: 200px;
+        }
+        
+        /* Modal responsive improvements */
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                padding: 1rem;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            
+            .grades-table th,
+            .grades-table td {
+                padding: 0.5rem;
+                font-size: 0.85rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                border: 1px solid var(--gray-300);
+                border-bottom: 1px solid var(--gray-300);
+                margin-bottom: 0;
+            }
+            
+            .tab.active {
+                border: 1px solid var(--gray-300);
+                border-bottom: 1px solid var(--gray-300);
+                margin-bottom: 0;
+            }
+            
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .performance-indicators {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .section-card {
+                padding: 1rem;
+            }
+            
+            .h2-school {
+                font-size: 1.2rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .btn-small {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.8rem;
+            }
+            
+            .btn-small i {
+                font-size: 0.85rem;
+            }
+            
+            .performance-indicators {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .indicator-card {
+                padding: 0.75rem;
+            }
+            
+            .indicator-value {
+                font-size: 1.5rem;
+            }
+            
+            .predictions-container {
+                grid-template-columns: 1fr;
+            }
+            
+            #gradeLevelsContainer .grades-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .dashboard-header {
+                padding: 0.75rem;
+            }
+            
+            .section-title {
+                font-size: 1.1rem;
+            }
+            
+            .btn-small {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
+            }
+            
+            .btn-small i {
+                font-size: 0.8rem;
+            }
+            
+            .th-school, .td-school {
+                padding: 0.4rem;
+                font-size: 0.8rem;
+            }
+            
+            .performance-indicators {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Ensure tables are responsive */
+        .table-responsive {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Responsive table on mobile */
+        @media (max-width: 768px) {
+            .table-enhanced {
+                font-size: 0.9rem;
+            }
+            
+            .th-school, .td-school {
+                padding: 0.5rem;
+            }
+        }
+        
+        /* Action buttons responsive stacking */
+        .section-title .btn-primary-school {
+            margin-top: 0.5rem;
+            margin-right: 0 !important;
+            float: none !important;
+            display: inline-block;
+        }
+        
+        @media (max-width: 768px) {
+            .section-title {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .section-title .btn-primary-school {
+                margin-top: 0.5rem;
+                width: 100%;
+                text-align: center;
+                justify-content: center;
+            }
+        }
+        
+        /* Responsive placeholder messages */
+        .placeholder-message {
+            padding: 2rem;
+            text-align: center;
+            color: var(--gray-500);
+        }
+        
+        @media (max-width: 576px) {
+            .placeholder-message {
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+    <script src="assets/js/security-utils.js"></script>
+</head>
+<body>
+    <header class="school-header dashboard-header">
+        <h1 class="dashboard-title"><i class="fas fa-school"></i> <span id="schoolName">لوحة تحكم المدرسة</span> <span class="academic-year-display" id="currentAcademicYearDisplay" style="font-size: 0.8em; color: var(--text-secondary); margin-right: 1rem; background: var(--background-secondary); padding: 0.25rem 0.5rem; border-radius: 4px;">السنة الدراسية: جاري التحميل...</span></h1>
+        <div class="header-controls" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+            <!-- Export Teachers Button -->
+            <button onclick="exportTeachersToExcel()" class="btn-primary-school btn-small" style="background: var(--gradient-primary); border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;" title="تصدير بيانات المعلمين إلى Excel">
+                <i class="fas fa-file-excel"></i> تصدير المعلمين
+            </button>
+            
+            <!-- Export Students Button -->
+            <button onclick="exportStudentsToExcel()" class="btn-primary-school btn-small" style="background: var(--gradient-success); border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;" title="تصدير بيانات الطلاب إلى Excel">
+                <i class="fas fa-file-excel"></i> تصدير الطلاب
+            </button>
+
+            <button onclick="logout()" class="btn-primary-school btn-primary">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+            </button>
+        </div>
+    </header>
+
+    <main class="school-container" id="dashboardSection">
+        <!-- Grade Levels List (Shown immediately after authentication) -->
+        <section class="section-card">
+            <h2 class="h2-school section-title">
+                <i class="fas fa-layer-group"></i> الصفوف الدراسية
+                <button type="button" class="btn-primary-school btn-small" onclick="showAddGradeLevelModal()">
+                    <i class="fas fa-plus"></i> إضافة مستوى
+                </button>
+                <button type="button" class="btn-primary-school btn-small" onclick="showSubjectManagementModal()">
+                    <i class="fas fa-book"></i> إدارة المواد
+                </button>
+                <button type="button" class="btn-primary-school btn-small" onclick="showTeacherAssignmentModal()">
+                    <i class="fas fa-chalkboard-teacher"></i> تعيين المعلمين
+                </button>
+            </h2>
+            <div id="gradeLevelsContainer">
+                <!-- Grade levels will be loaded here automatically after authentication -->
+                <div class="placeholder-message">
+                    <p>جارٍ تحميل الصفوف الدراسية...</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Performance Analytics Section -->
+        <section class="section-card" id="performanceAnalyticsSection" style="display: none;">
+            <h2 class="h2-school section-title"><i class="fas fa-chart-line"></i> تحليل الأداء التعليمي</h2>
+            <div class="form-row">
+                <div class="form-group-school">
+                    <label for="analyticsGradeLevel"><i class="fas fa-layer-group"></i> الصف الدراسي</label>
+                    <select id="analyticsGradeLevel" class="form-input" onchange="loadPerformanceAnalytics()">
+                        <option value="">اختر الصف</option>
+                    </select>
+                </div>
+                <div class="form-group-school">
+                    <label for="analyticsSubject"><i class="fas fa-book"></i> المادة الدراسية</label>
+                    <select id="analyticsSubject" class="form-input" onchange="loadPerformanceAnalytics()">
+                        <option value="">جميع المواد</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Performance Indicators -->
+            <div class="performance-indicators grid-container grid-auto-fit">
+                <div class="indicator-card card">
+                    <div class="indicator-value" id="avgGrade">0</div>
+                    <div class="indicator-label">المعدل العام</div>
+                </div>
+                <div class="indicator-card card">
+                    <div class="indicator-value" id="passRate">0%</div>
+                    <div class="indicator-label">معدل النجاح</div>
+                </div>
+                <div class="indicator-card card">
+                    <div class="indicator-value" id="attendanceRate">0%</div>
+                    <div class="indicator-label">معدل الحضور</div>
+                </div>
+                <div class="indicator-card card">
+                    <div class="indicator-value" id="excellenceRate">0%</div>
+                    <div class="indicator-label">معدل التفوق</div>
+                </div>
+            </div>
+            
+            <!-- Charts Container -->
+            <div class="charts-container grid-container grid-auto-fit">
+                <div class="chart-wrapper card">
+                    <canvas id="gradesChart"></canvas>
+                </div>
+                <div class="chart-wrapper card">
+                    <canvas id="attendanceChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- AI Predictions -->
+            <div class="ai-predictions-section">
+                <h3><i class="fas fa-robot"></i> تنبؤات الذكاء الاصطناعي</h3>
+                <div class="predictions-container grid-container grid-auto-fit">
+                    <div class="prediction-card card">
+                        <h4>الطلاب المتفوقون المتوقعون</h4>
+                        <ul id="topStudentsList"></ul>
+                    </div>
+                    <div class="prediction-card card">
+                        <h4>الطلاب المتأخرون المتوقعون</h4>
+                        <ul id="strugglingStudentsList"></ul>
+                    </div>
+                    <div class="prediction-card card">
+                        <h4>التوصيات التعليمية</h4>
+                        <ul id="recommendationsList"></ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Grade Level Content (Dynamically Loaded) -->
+        <section class="section-card">
+            <h2 class="h2-school section-title">
+                <i class="fas fa-book-open"></i> محتوى الصف
+                <button type="button" class="btn-primary-school btn-small" onclick="showPerformanceAnalytics()">
+                    <i class="fas fa-chart-bar"></i> تحليل الأداء
+                </button>
+            </h2>
+            <div id="gradeLevelContent">
+                <!-- Content will be loaded here based on grade level selection -->
+                <div class="placeholder-message">
+                    <p>يرجى اختيار صف لعرض المواد والطلاب</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- نموذج إدارة الدرجات -->
+    <div id="gradesModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('gradesModal')">&times;</span>
+            <h2 class="section-title"><i class="fas fa-chart-line"></i> إدارة درجات الطالب: <span id="gradesStudentName"></span></h2>
+            
+            <!-- Performance Insights and Predictions -->
+            <div class="performance-insights">
+                <h3><i class="fas fa-lightbulb"></i> رؤى الأداء والتنبؤات</h3>
+                <div class="insights-container grid-container grid-auto-fit">
+                    <div class="insight-card card">
+                        <div class="insight-title">المعدل العام</div>
+                        <div class="insight-value" id="studentAvgGrade">0</div>
+                    </div>
+                    <div class="insight-card card">
+                        <div class="insight-title">التنبؤ بالأداء</div>
+                        <div class="insight-value" id="studentPerformancePrediction">متوسط</div>
+                    </div>
+                    <div class="insight-card card" id="passFailCard">
+                        <div class="insight-title">توقع النجاح/الرسوب</div>
+                        <div class="insight-value" id="passFailPrediction">-</div>
+                    </div>
+                </div>
+                
+                <!-- Pass/Fail Prediction Details -->
+                <div id="predictionDetailsBox" class="prediction-box" style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: var(--radius-lg); border-right: 4px solid #6c757d; display: none;">
+                    <div id="predictionMessage" style="font-weight: 500; margin-bottom: 0.5rem;"></div>
+                    <div id="predictionConfidence" style="font-size: 0.9rem; color: #6c757d;"></div>
+                </div>
+
+                <!-- Forecasted Grades Section -->
+                <div id="forecastSection" style="margin-top: 1.5rem; display: none;">
+                    <h3 style="margin-bottom: 1rem; color: var(--brand-primary-800);"><i class="fas fa-chart-line" style="color: var(--brand-primary-500);"></i> الدرجات المتوقعة للفترات القادمة</h3>
+                    <div id="forecastContainer" class="forecast-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;"></div>
+                </div>
+                
+                <!-- Academic Recommendations -->
+                <div class="recommendations-box" style="margin-top: 1.5rem; padding: 1.5rem; background: var(--brand-primary-50); border-radius: var(--radius-lg); border-right: 5px solid var(--brand-primary-500);">
+                    <h3 style="margin-bottom: 1rem; color: var(--brand-primary-800);"><i class="fas fa-graduation-cap" style="color: var(--brand-primary-500);"></i> الإرشاد الأكاديمي</h3>
+                    <div id="studentRecommendations" style="line-height: 1.6;">-</div>
+                </div>
+            </div>
+            
+            <div class="grades-container table-responsive">
+                <table class="table-school table-enhanced grades-table">
+                    <thead>
+                        <tr>
+                            <th class="th-school">المادة</th>
+                            <th class="th-school">شهر أول</th>
+                            <th class="th-school">شهر ثاني</th>
+                            <th class="th-school">نصف السنة</th>
+                            <th class="th-school">شهر ثالث</th>
+                            <th class="th-school">شهر رابع</th>
+                            <th class="th-school">النهائي</th>
+                            <th class="th-school">النتيجة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="gradesTableBody"></tbody>
+                    <tfoot>
+                        <tr class="totals-row">
+                            <th class="th-school">المجموع</th>
+                            <td class="td-school" id="month1Total">0</td>
+                            <td class="td-school" id="month2Total">0</td>
+                            <td class="td-school" id="midtermTotal">0</td>
+                            <td class="td-school" id="month3Total">0</td>
+                            <td class="td-school" id="month4Total">0</td>
+                            <td class="td-school" id="finalTotal">0</td>
+                            <td class="td-school">-</td>
+                        </tr>
+                        <tr class="average-row">
+                            <th class="th-school">المعدل</th>
+                            <td class="td-school" id="month1Average">0</td>
+                            <td class="td-school" id="month2Average">0</td>
+                            <td class="td-school" id="midtermAverage">0</td>
+                            <td class="td-school" id="month3Average">0</td>
+                            <td class="td-school" id="month4Average">0</td>
+                            <td class="td-school" id="finalAverage">0</td>
+                            <td class="td-school" id="overallAverage">0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            
+            <button class="btn-primary-school btn-primary" style="margin-top: 1rem;" onclick="saveGrades()">
+                <i class="fas fa-save"></i> حفظ الدرجات
+            </button>
+        </div>
+    </div>
+
+    <!-- نموذج الحضور اليومي -->
+    <div id="attendanceModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('attendanceModal')">&times;</span>
+            <h2 class="section-title"><i class="fas fa-calendar-check"></i> حضور الطالب: <span id="attendanceStudentName"></span></h2>
+            
+            <!-- إضافة حضور جديد -->
+            <div class="attendance-form">
+                <h3>إضافة حضور يوم جديد</h3>
+                <div class="form-row">
+                    <div class="form-group-school">
+                        <label>التاريخ</label>
+                        <input type="date" id="attendanceDate" class="form-input">
+                    </div>
+                    <div class="form-group-school">
+                        <button class="btn-primary-school btn-primary" onclick="addDailyAttendance()">
+                            <i class="fas fa-plus"></i> إضافة يوم
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- جدول الحضور -->
+            <div class="attendance-container table-responsive">
+                <div id="attendanceTableContainer"></div>
+            </div>
+            
+            <button class="btn-primary-school btn-primary" style="margin-top: 1rem;" onclick="saveAttendance()">
+                <i class="fas fa-save"></i> حفظ الحضور
+            </button>
+        </div>
+    </div>
+
+    <!-- نموذج عرض معلومات الطالب -->
+    <div id="studentInfoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('studentInfoModal')">&times;</span>
+            <h2 class="section-title"><i class="fas fa-user-circle"></i> معلومات الطالب</h2>
+            
+            <div class="student-info-container" style="padding: 1rem;">
+                <div class="info-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                    <div class="info-card" style="background: var(--gray-100, #f8f9fa); padding: 1rem; border-radius: 8px;">
+                        <div class="info-label" style="font-size: 0.85rem; color: #6c757d; margin-bottom: 0.25rem;"><i class="fas fa-user"></i> اسم الطالب</div>
+                        <div class="info-value" id="infoStudentName" style="font-size: 1.1rem; font-weight: 600;">-</div>
+                    </div>
+                    <div class="info-card" style="background: var(--gray-100, #f8f9fa); padding: 1rem; border-radius: 8px;">
+                        <div class="info-label" style="font-size: 0.85rem; color: #6c757d; margin-bottom: 0.25rem;"><i class="fas fa-graduation-cap"></i> الصف الدراسي</div>
+                        <div class="info-value" id="infoStudentGrade" style="font-size: 1.1rem; font-weight: 600;">-</div>
+                    </div>
+                    <div class="info-card" style="background: var(--gray-100, #f8f9fa); padding: 1rem; border-radius: 8px;">
+                        <div class="info-label" style="font-size: 0.85rem; color: #6c757d; margin-bottom: 0.25rem;"><i class="fas fa-door-open"></i> القاعة</div>
+                        <div class="info-value" id="infoStudentRoom" style="font-size: 1.1rem; font-weight: 600;">-</div>
+                    </div>
+                    <div class="info-card" style="background: var(--gray-100, #f8f9fa); padding: 1rem; border-radius: 8px;">
+                        <div class="info-label" style="font-size: 0.85rem; color: #6c757d; margin-bottom: 0.25rem;"><i class="fas fa-qrcode"></i> رمز الطالب</div>
+                        <div class="info-value" id="infoStudentCode" style="font-size: 1.1rem; font-weight: 600;">-</div>
+                    </div>
+                    <div class="info-card" style="background: var(--gray-100, #f8f9fa); padding: 1rem; border-radius: 8px;">
+                        <div class="info-label" style="font-size: 0.85rem; color: #6c757d; margin-bottom: 0.25rem;"><i class="fas fa-phone"></i> رقم ولي الأمر</div>
+                        <div class="info-value" id="infoParentContact" style="font-size: 1.1rem; font-weight: 600;">-</div>
+                    </div>
+                    <div class="info-card" style="background: var(--gray-100, #f8f9fa); padding: 1rem; border-radius: 8px;">
+                        <div class="info-label" style="font-size: 0.85rem; color: #6c757d; margin-bottom: 0.25rem;"><i class="fas fa-tint"></i> فصيلة الدم</div>
+                        <div class="info-value" id="infoBloodType" style="font-size: 1.1rem; font-weight: 600;">-</div>
+                    </div>
+                    <div class="info-card" style="background: var(--gray-100, #f8f9fa); padding: 1rem; border-radius: 8px; grid-column: 1 / -1;">
+                        <div class="info-label" style="font-size: 0.85rem; color: #6c757d; margin-bottom: 0.25rem;"><i class="fas fa-heartbeat"></i> الأمراض المزمنة</div>
+                        <div class="info-value" id="infoChronicDisease" style="font-size: 1.1rem; font-weight: 600;">-</div>
+                    </div>
+                    <div class="info-card" style="background: var(--gray-100, #f8f9fa); padding: 1rem; border-radius: 8px; grid-column: 1 / -1;">
+                        <div class="info-label" style="font-size: 0.85rem; color: #6c757d; margin-bottom: 0.25rem;"><i class="fas fa-sticky-note"></i> الملاحظات</div>
+                        <div class="info-value" id="infoStudentNotes" style="font-size: 1.1rem; font-weight: 600;">-</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn-primary-school btn-primary" style="margin-top: 1rem;" onclick="closeModal('studentInfoModal')">
+                <i class="fas fa-times"></i> إغلاق
+            </button>
+        </div>
+    </div>
+
+    <!-- نموذج إدارة المواد والدرجات -->
+    <div id="subjectsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('subjectsModal')">&times;</span>
+            <h2 class="section-title"><i class="fas fa-book"></i> إدارة المواد والدرجات للطالب: <span id="modalStudentName"></span></h2>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('scores-tab')">الدرجات</div>
+                <div class="tab" onclick="switchTab('daily-attendance-tab')">الحضور اليومي</div>
+            </div>
+            
+            <!-- قسم الدرجات -->
+            <div id="scores-tab" class="tab-content active">
+                <h3>الدرجات الفصلية</h3>
+                <div class="form-row">
+                    <div class="form-group-school">
+                        <label>اسم المادة</label>
+                        <input type="text" id="subjectName" class="form-input">
+                    </div>
+                    <div class="form-group-school">
+                        <button class="btn-primary-school btn-primary" onclick="addSubject()">
+                            <i class="fas fa-plus"></i> إضافة مادة
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table-school table-enhanced scores-table">
+                        <thead>
+                            <tr>
+                                <th class="th-school">المادة</th>
+                                <th class="th-school">شهر الأول</th>
+                                <th class="th-school">شهر الثاني</th>
+                                <th class="th-school">نصف السنة</th>
+                                <th class="th-school">شهر الثالث</th>
+                                <th class="th-school">شهر الرابع</th>
+                                <th class="th-school">النهائي</th>
+                                <th class="th-school">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scoresTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- قسم الحضور اليومي -->
+            <div id="daily-attendance-tab" class="tab-content">
+                <h3>الحضور اليومي</h3>
+                <div class="form-row">
+                    <div class="form-group-school">
+                        <label>التاريخ</label>
+                        <input type="date" id="dailyAttendanceDate" class="form-input">
+                    </div>
+                    <div class="form-group-school">
+                        <label>الحالة</label>
+                        <select id="dailyAttendanceStatus" class="form-input">
+                            <option value="present">حاضر</option>
+                            <option value="absent">غائب</option>
+                            <option value="late">متأخر</option>
+                            <option value="excused">معذور</option>
+                        </select>
+                    </div>
+                    <div class="form-group-school">
+                        <button class="btn-primary-school btn-primary" onclick="addDailyAttendanceRecord()">
+                            <i class="fas fa-plus"></i> إضافة حضور
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table-school table-enhanced">
+                        <thead>
+                            <tr>
+                                <th class="th-school">التاريخ</th>
+                                <th class="th-school">الحالة</th>
+                                <th class="th-school">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dailyAttendanceTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- نموذج إدارة المواد -->
+    <div id="subjectManagementModal" class="modal">
+        <div class="modal-content" style="max-width: 100%; max-height: 100vh; overflow-y: auto; width: 100%; height: 100vh;">
+            <span class="close-modal" onclick="closeSubjectManagementModal()">&times;</span>
+            <h2 class="section-title"><i class="fas fa-book"></i> إدارة المواد الدراسية</h2>
+            
+            <!-- Add New Subject Section -->
+            <div class="add-subject-section" style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                <h3><i class="fas fa-plus-circle"></i> إضافة مادة جديدة</h3>
+                <form id="addSubjectForm" onsubmit="addSubject(event); return false;">
+                    <div class="form-row">
+                        <div class="form-group-school">
+                            <label for="subjectNameInput"><i class="fas fa-book"></i> اسم المادة *</label>
+                            <input type="text" id="subjectNameInput" class="form-input" required placeholder="مثال: الرياضيات">
+                        </div>
+                        <div class="form-group-school">
+                            <label for="subjectGradeLevel"><i class="fas fa-layer-group"></i> المستوى الدراسي</label>
+                            <select id="subjectGradeLevel" class="form-input">
+                                <option value="">غير محدد</option>
+                                <!-- Grade levels will be populated dynamically -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions" style="margin-top: 1rem;">
+                        <button type="submit" class="btn-primary-school btn-primary">
+                            <i class="fas fa-plus"></i> إضافة المادة
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Search and Filter Section -->
+            <div class="search-filter-section" style="margin-bottom: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                <div class="form-row">
+                    <div class="form-group-school" style="flex: 1;">
+                        <label for="subjectSearch"><i class="fas fa-search"></i> البحث في المواد</label>
+                        <input type="text" id="subjectSearch" class="form-input" placeholder="ابحث بالاسم..." style="width: 100%;">
+                    </div>
+                    <div class="form-group-school" style="margin-right: 1rem;">
+                        <label for="gradeLevelFilter"><i class="fas fa-filter"></i> تصفية حسب المستوى</label>
+                        <select id="gradeLevelFilter" class="form-input" onchange="filterSubjects()">
+                            <option value="">جميع المستويات</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Subjects List Section -->
+            <div class="subjects-list-section">
+                <h3><i class="fas fa-list"></i> المواد المتاحة (<span id="subjectsCount">0</span>)</h3>
+                <div class="table-responsive">
+                    <table class="table-school table-enhanced">
+                        <thead>
+                            <tr>
+                                <th class="th-school">اسم المادة</th>
+                                <th class="th-school">المستوى الدراسي</th>
+                                <th class="th-school">تاريخ الإنشاء</th>
+                                <th class="th-school">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subjectsTableBody">
+                            <!-- Subjects will be loaded here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نموذج إضافة المعلم -->
+    <div id="addTeacherModal" class="modal">
+        <div class="modal-content" style="max-width: 650px;">
+            <span class="close-modal" onclick="closeModal('addTeacherModal')">&times;</span>
+            <h2 class="section-title"><i class="fas fa-user-plus"></i> إضافة معلم جديد</h2>
+            
+            <!-- Auto-generated code preview -->
+            <div class="code-preview-section" style="margin-bottom: 1.5rem; padding: 1rem; background: #e3f2fd; border-radius: 8px; border-left: 4px solid #2196f3;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <h4 style="margin: 0 0 0.5rem 0; color: #1976d2; font-size: 1.1rem;">
+                            <i class="fas fa-key"></i> رمز المعلم (يتم إنشاؤه تلقائياً)
+                        </h4>
+                        <div id="teacherCodePreview" style="font-family: monospace; font-size: 1.2rem; font-weight: bold; color: #333; background: white; padding: 0.5rem 1rem; border-radius: 4px; display: inline-block; min-width: 200px;">
+                            TCHR-XXXXX-XXXX
+                        </div>
+                    </div>
+                    <button type="button" class="btn-secondary-school" onclick="generateNewTeacherCode()" style="align-self: flex-start;">
+                        <i class="fas fa-sync"></i> تجديد الرمز
+                    </button>
+                </div>
+                <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #666;">
+                    <i class="fas fa-info-circle"></i> سيتم إنشاء رمز فريد تلقائياً للمعلم لاستخدامه في تسجيل الدخول
+                </p>
+            </div>
+            
+            <form id="addTeacherForm">
+                <div class="form-row">
+                    <div class="form-group-school">
+                        <label for="teacherName"><i class="fas fa-user"></i> اسم المعلم *</label>
+                        <input type="text" id="teacherName" class="form-input" required>
+                    </div>
+                    <div class="form-group-school">
+                        <label for="teacherPhone"><i class="fas fa-phone"></i> رقم الهاتف</label>
+                        <input type="tel" id="teacherPhone" class="form-input">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group-school">
+                        <label for="teacherEmail"><i class="fas fa-envelope"></i> البريد الإلكتروني</label>
+                        <input type="email" id="teacherEmail" class="form-input">
+                    </div>
+                    <div class="form-group-school">
+                        <label for="teacherSpecialization"><i class="fas fa-graduation-cap"></i> التخصص</label>
+                        <input type="text" id="teacherSpecialization" class="form-input">
+                    </div>
+                </div>
+
+                <div class="form-group-school">
+                    <label for="teacherGradeLevel"><i class="fas fa-layer-group"></i> المستوى الدراسي (اختياري)</label>
+                    <select id="teacherGradeLevel" class="form-input">
+                        <option value="">غير محدد</option>
+                        <!-- Grade levels will be populated dynamically -->
+                    </select>
+                </div>
+                
+                <div class="form-group-school">
+                    <label for="teacherSubjects"><i class="fas fa-book"></i> المواد التي يدرسها *</label>
+                    <div id="subjectCheckboxes" class="checkbox-group" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 1rem; border-radius: 4px;">
+                        <!-- Subjects will be loaded here dynamically -->
+                        <p>جارٍ تحميل المواد...</p>
+                    </div>
+                </div>
+                
+                <div class="form-actions" style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn-secondary-school" onclick="closeModal('addTeacherModal')">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                    <button type="submit" class="btn-primary-school btn-primary">
+                        <i class="fas fa-save"></i> حفظ المعلم
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- نموذج عرض المعلمين -->
+    <div id="teachersListModal" class="modal">
+        <div class="modal-content" style="max-width: 100%; max-height: 100vh; overflow-y: auto; width: 100%; height: 100vh;">
+            <span class="close-modal" onclick="closeModal('teachersListModal')">&times;</span>
+            <h2 class="section-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <span><i class="fas fa-users"></i> قائمة المعلمين - <span id="teachersGradeLevel"></span></span>
+                <button class="btn-primary-school btn-primary" onclick="showAddTeacherModal()" style="margin: 0;">
+                    <i class="fas fa-plus"></i> إضافة معلم جديد
+                </button>
+            </h2>
+            
+            <!-- Search and Filter Section -->
+            <div class="search-filter-section" style="margin-bottom: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                <div class="form-row">
+                    <div class="form-group-school" style="flex: 1;">
+                        <label for="teacherSearch"><i class="fas fa-search"></i> البحث</label>
+                        <input type="text" id="teacherSearch" class="form-input" placeholder="ابحث بالاسم أو الرمز أو البريد الإلكتروني..." style="width: 100%;">
+                    </div>
+                    <div class="form-group-school" style="margin-right: 1rem;">
+                        <label for="teacherFilterSubject"><i class="fas fa-book"></i> تصفية حسب المادة</label>
+                        <select id="teacherFilterSubject" class="form-input">
+                            <option value="">جميع المواد</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table-school table-enhanced">
+                    <thead>
+                        <tr>
+                            <th class="th-school">الاسم</th>
+                            <th class="th-school">المواد</th>
+                            <th class="th-school">الصف الدراسي</th>
+                            <th class="th-school">البريد الإلكتروني</th>
+                            <th class="th-school">رقم الهاتف</th>
+                            <th class="th-school">رمز المعلم</th>
+                            <th class="th-school">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teachersTableBody">
+                        <!-- Teachers will be loaded here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="margin-top: 1rem; text-align: center; display: flex; justify-content: space-between; align-items: center;">
+                <div class="teachers-summary" id="teachersSummary" style="font-size: 0.9rem; color: #6c757d;">
+                    <!-- Summary will be loaded here -->
+                </div>
+                <button class="btn-primary-school btn-primary" onclick="showAddTeacherModal()">
+                    <i class="fas fa-plus"></i> إضافة معلم جديد
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subject Assignment Interface -->
+    <div id="subjectAssignmentContainer" class="modal" style="display: none;">
+        <div class="modal-content" style="width: 100vw; height: 100vh; max-width: none; max-height: none; overflow-y: auto; padding: 0;">
+            <span class="close-modal" onclick="cancelSubjectAssignment()" style="position: fixed; top: 1rem; right: 1rem; z-index: 10001; background: rgba(0,0,0,0.7); color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">&times;</span>
+            <!-- Content will be loaded dynamically by JavaScript -->
+        </div>
+    </div>
+
+
+
+    <!-- School-Level Teacher Assignment Modal - Enhanced Professional Version -->
+    <div id="teacherAssignmentModal" class="modal">
+        <div class="modal-content" style="max-width: 100%; max-height: 100vh; overflow-y: auto; width: 100%; height: 100vh; padding: 0;">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background: linear-gradient(135deg, var(--brand-primary-600) 0%, var(--brand-primary-700) 100%); color: white; padding: 1.5rem 2rem; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="background: rgba(255,255,255,0.2); padding: 0.75rem; border-radius: 12px;">
+                        <i class="fas fa-chalkboard-teacher" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <h2 style="margin: 0; font-size: 1.5rem; font-weight: 700;">إدارة المعلمين والتعيينات</h2>
+                        <p style="margin: 0.25rem 0 0 0; opacity: 0.9; font-size: 0.9rem;">تعيين المواد وإدارة المعلمين في المدرسة</p>
+                    </div>
+                </div>
+                <button onclick="closeTeacherAssignmentModal()" style="background: rgba(255,255,255,0.2); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div style="padding: 1.5rem 2rem;">
+                <!-- Stats Overview -->
+                <div class="stats-overview" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                    <div class="stat-card" style="background: linear-gradient(135deg, var(--brand-primary-50) 0%, var(--brand-primary-100) 100%); padding: 1rem; border-radius: 10px; border-right: 4px solid var(--brand-primary-500); display: flex; align-items: center; gap: 1rem;">
+                        <div style="background: var(--brand-primary-500); color: white; width: 45px; height: 45px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-users" style="font-size: 1.2rem;"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--brand-primary-700);" id="totalTeachersCount">0</div>
+                            <div style="font-size: 0.85rem; color: var(--text-secondary);">إجمالي المعلمين</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, var(--success-50) 0%, var(--success-100) 100%); padding: 1rem; border-radius: 10px; border-right: 4px solid var(--success-500); display: flex; align-items: center; gap: 1rem;">
+                        <div style="background: var(--success-500); color: white; width: 45px; height: 45px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-book" style="font-size: 1.2rem;"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--success-700);" id="totalAssignmentsCount">0</div>
+                            <div style="font-size: 0.85rem; color: var(--text-secondary);">التعيينات النشطة</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, var(--warning-50) 0%, var(--warning-100) 100%); padding: 1rem; border-radius: 10px; border-right: 4px solid var(--warning-500); display: flex; align-items: center; gap: 1rem;">
+                        <div style="background: var(--warning-500); color: white; width: 45px; height: 45px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-user-plus" style="font-size: 1.2rem;"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--warning-700);" id="newTeachersThisMonth">0</div>
+                            <div style="font-size: 0.85rem; color: var(--text-secondary);">معلمين جدد هذا الشهر</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Bar -->
+                <div class="action-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <!-- Tabs -->
+                    <div class="tabs" style="display: flex; gap: 0.5rem; background: var(--neutral-100); padding: 0.25rem; border-radius: 10px;">
+                        <div class="tab active" id="tab-teachers-list" onclick="switchAssignmentTab('teachers-list-tab')" style="padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-users"></i> قائمة المعلمين
+                        </div>
+                        <div class="tab" id="tab-manage-assignments" onclick="switchAssignmentTab('manage-assignments-tab')" style="padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-tasks"></i> إدارة التعيينات
+                        </div>
+                    </div>
+                    
+                    <!-- Add New Teacher Button -->
+                    <button onclick="openAddTeacherFromAssignment()" class="btn-primary-school btn-primary" style="background: linear-gradient(135deg, var(--success-500) 0%, var(--success-600) 100%); border: none; padding: 0.75rem 1.5rem; border-radius: 10px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3); transition: all 0.3s ease;">
+                        <i class="fas fa-user-plus"></i>
+                        <span>إضافة معلم جديد</span>
+                    </button>
+                </div>
+
+                <!-- Teachers List Tab -->
+                <div id="teachers-list-tab" class="tab-content active">
+                    <!-- Enhanced Search and Filter Section -->
+                    <div class="search-filter-section" style="margin-bottom: 1.5rem; padding: 1.25rem; background: linear-gradient(135deg, var(--neutral-50) 0%, var(--neutral-100) 100%); border-radius: 12px; border: 1px solid var(--neutral-200);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h4 style="margin: 0; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-filter" style="color: var(--brand-primary-500);"></i> 
+                                البحث والتصفية
+                            </h4>
+                            <button onclick="resetTeacherFilters()" style="background: none; border: none; color: var(--brand-primary-600); cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 0.25rem;">
+                                <i class="fas fa-undo"></i> إعادة تعيين
+                            </button>
+                        </div>
+                        <div class="form-row" style="gap: 1rem;">
+                            <div class="form-group-school" style="flex: 2;">
+                                <label for="teacherAssignmentSearch" style="font-size: 0.9rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.25rem;">
+                                    <i class="fas fa-search" style="color: var(--brand-primary-500);"></i> البحث
+                                </label>
+                                <div style="position: relative;">
+                                    <input type="text" id="teacherAssignmentSearch" class="form-input" placeholder="ابحث بالاسم أو الرمز أو البريد الإلكتروني..." style="width: 100%; padding-right: 2.5rem; border-radius: 8px; border: 2px solid var(--neutral-300); transition: all 0.3s ease;" oninput="filterTeachersForAssignment()">
+                                    <i class="fas fa-search" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: var(--neutral-400);"></i>
+                                </div>
+                            </div>
+                            <div class="form-group-school" style="flex: 1;">
+                                <label for="teacherAssignmentGradeFilter" style="font-size: 0.9rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.25rem;">
+                                    <i class="fas fa-layer-group" style="color: var(--brand-primary-500);"></i> الصف
+                                </label>
+                                <select id="teacherAssignmentGradeFilter" class="form-input" onchange="filterTeachersForAssignment()" style="border-radius: 8px; border: 2px solid var(--neutral-300); cursor: pointer;">
+                                    <option value="">جميع الصفوف</option>
+                                </select>
+                            </div>
+                            <div class="form-group-school" style="flex: 1;">
+                                <label for="teacherAssignmentSubjectFilter" style="font-size: 0.9rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.25rem;">
+                                    <i class="fas fa-book" style="color: var(--brand-primary-500);"></i> المادة
+                                </label>
+                                <select id="teacherAssignmentSubjectFilter" class="form-input" onchange="filterTeachersForAssignment()" style="border-radius: 8px; border: 2px solid var(--neutral-300); cursor: pointer;">
+                                    <option value="">جميع المواد</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Teachers Table Section -->
+                    <div class="teachers-assignment-section" style="background: white; border-radius: 12px; border: 1px solid var(--neutral-200); overflow: hidden;">
+                        <div style="padding: 1rem 1.5rem; background: var(--neutral-50); border-bottom: 1px solid var(--neutral-200); display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="margin: 0; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
+                                <i class="fas fa-users" style="color: var(--brand-primary-500);"></i> 
+                                المعلمين في المدرسة
+                                <span id="filteredTeachersCount" style="background: var(--brand-primary-500); color: white; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.8rem;">0</span>
+                            </h3>
+                            
+                            <div class="assignment-controls" style="display: flex; gap: 0.5rem;">
+                                <button class="btn-secondary-school" onclick="selectAllTeachersForAssignment()" style="padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; display: flex; align-items: center; gap: 0.25rem;">
+                                    <i class="fas fa-check-square"></i> تحديد الكل
+                                </button>
+                                <button class="btn-secondary-school" onclick="clearAllTeachersForAssignment()" style="padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; display: flex; align-items: center; gap: 0.25rem;">
+                                    <i class="fas fa-square"></i> إلغاء التحديد
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                            <table class="table-school table-enhanced" style="margin: 0;">
+                                <thead style="position: sticky; top: 0; z-index: 10;">
+                                    <tr style="background: var(--neutral-100);">
+                                        <th class="th-school" style="width: 50px; text-align: center;">
+                                            <input type="checkbox" id="selectAllAssignmentCheckbox" onchange="toggleSelectAllAssignmentTeachers()" style="cursor: pointer; width: 18px; height: 18px;">
+                                        </th>
+                                        <th class="th-school" style="min-width: 150px;">الاسم</th>
+                                        <th class="th-school" style="min-width: 200px;">المواد المعينة</th>
+                                        <th class="th-school">الصف</th>
+                                        <th class="th-school">رمز الدخول</th>
+                                        <th class="th-school">البريد الإلكتروني</th>
+                                        <th class="th-school">رقم الهاتف</th>
+                                        <th class="th-school" style="text-align: center;">الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="assignmentTeachersTableBody">
+                                    <!-- Teachers will be loaded here dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Empty State -->
+                        <div id="teachersEmptyState" style="display: none; padding: 3rem; text-align: center;">
+                            <div style="background: var(--neutral-100); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                                <i class="fas fa-users" style="font-size: 2rem; color: var(--neutral-400);"></i>
+                            </div>
+                            <h4 style="color: var(--text-secondary); margin-bottom: 0.5rem;">لا يوجد معلمين</h4>
+                            <p style="color: var(--text-tertiary); font-size: 0.9rem; margin-bottom: 1rem;">لم يتم إضافة أي معلمين إلى المدرسة بعد</p>
+                            <button onclick="openAddTeacherFromAssignment()" class="btn-primary-school btn-primary" style="padding: 0.75rem 1.5rem;">
+                                <i class="fas fa-user-plus"></i> إضافة معلم جديد
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manage Assignments Tab -->
+                <div id="manage-assignments-tab" class="tab-content">
+                    <!-- Add New Assignment Card -->
+                    <div class="add-assignment-section" style="background: linear-gradient(135deg, var(--brand-primary-50) 0%, var(--brand-primary-100) 100%); padding: 1.5rem; border-radius: 12px; border: 2px solid var(--brand-primary-200); margin-bottom: 1.5rem;">
+                        <h3 style="margin: 0 0 1rem 0; color: var(--brand-primary-700); display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-plus-circle"></i> إضافة تعيين جديد
+                        </h3>
+                        <form id="newAssignmentForm" onsubmit="createNewAssignment(event); return false;">
+                            <div class="form-row" style="gap: 1rem; align-items: flex-end;">
+                                <div class="form-group-school" style="flex: 1;">
+                                    <label for="assignTeacherSelect" style="font-size: 0.9rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.25rem;">
+                                        <i class="fas fa-chalkboard-teacher" style="color: var(--brand-primary-500);"></i> المعلم *
+                                    </label>
+                                    <select id="assignTeacherSelect" class="form-input" required style="border-radius: 8px; border: 2px solid var(--brand-primary-300);">
+                                        <option value="">اختر معلم</option>
+                                    </select>
+                                </div>
+                                <div class="form-group-school" style="flex: 1;">
+                                    <label for="assignSubjectSelect" style="font-size: 0.9rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.25rem;">
+                                        <i class="fas fa-book" style="color: var(--brand-primary-500);"></i> المادة *
+                                    </label>
+                                    <select id="assignSubjectSelect" class="form-input" required style="border-radius: 8px; border: 2px solid var(--brand-primary-300);">
+                                        <option value="">اختر مادة</option>
+                                    </select>
+                                </div>
+                                <div class="form-group-school" style="flex: 1;">
+                                    <label for="assignGradeSelect" style="font-size: 0.9rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.25rem;">
+                                        <i class="fas fa-layer-group" style="color: var(--brand-primary-500);"></i> الصف *
+                                    </label>
+                                    <select id="assignGradeSelect" class="form-input" required style="border-radius: 8px; border: 2px solid var(--brand-primary-300);">
+                                        <option value="">اختر صف</option>
+                                    </select>
+                                </div>
+                                <div class="form-group-school">
+                                    <button type="submit" class="btn-primary-school btn-primary" style="background: linear-gradient(135deg, var(--brand-primary-500) 0%, var(--brand-primary-600) 100%); border: none; padding: 0.75rem 1.5rem; border-radius: 8px; white-space: nowrap; display: flex; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-plus"></i> إضافة التعيين
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Current Assignments -->
+                    <div class="current-assignments-section" style="background: white; border-radius: 12px; border: 1px solid var(--neutral-200); overflow: hidden;">
+                        <div style="padding: 1rem 1.5rem; background: var(--neutral-50); border-bottom: 1px solid var(--neutral-200); display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="margin: 0; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
+                                <i class="fas fa-list" style="color: var(--brand-primary-500);"></i> 
+                                التعيينات الحالية
+                                <span id="allAssignmentsCount" style="background: var(--success-500); color: white; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.8rem;">0</span>
+                            </h3>
+                        </div>
+                        <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
+                            <table class="table-school table-enhanced" style="margin: 0;">
+                                <thead style="position: sticky; top: 0; z-index: 10;">
+                                    <tr style="background: var(--neutral-100);">
+                                        <th class="th-school">المعلم</th>
+                                        <th class="th-school">رمز الدخول</th>
+                                        <th class="th-school">المادة</th>
+                                        <th class="th-school">الصف</th>
+                                        <th class="th-school" style="text-align: center;">الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allAssignmentsTableBody">
+                                    <!-- Assignments will be loaded here dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Empty State -->
+                        <div id="assignmentsEmptyState" style="display: none; padding: 3rem; text-align: center;">
+                            <div style="background: var(--neutral-100); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                                <i class="fas fa-tasks" style="font-size: 2rem; color: var(--neutral-400);"></i>
+                            </div>
+                            <h4 style="color: var(--text-secondary); margin-bottom: 0.5rem;">لا توجد تعيينات</h4>
+                            <p style="color: var(--text-tertiary); font-size: 0.9rem;">لم يتم إنشاء أي تعيينات بعد</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add New Teacher Modal - Enhanced Version (Full Page) -->
+    <div id="enhancedAddTeacherModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; justify-content: center; align-items: center;">
+        <div class="modal-content" style="width: 100vw; height: 100vh; max-width: none; max-height: none; overflow-y: auto; padding: 0; margin: 0;">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background: linear-gradient(135deg, var(--success-500) 0%, var(--success-600) 100%); color: white; padding: 2rem 3rem; border-radius: 0; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10001; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                <div style="display: flex; align-items: center; gap: 1.5rem;">
+                    <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 16px;">
+                        <i class="fas fa-user-plus" style="font-size: 2rem;"></i>
+                    </div>
+                    <div>
+                        <h2 style="margin: 0; font-size: 2rem; font-weight: 700;">إضافة معلم جديد</h2>
+                        <p style="margin: 0.5rem 0 0 0; opacity: 0.95; font-size: 1.1rem;">أدخل بيانات المعلم وقم بتعيين المواد تملاء الصفحة بالكامل</p>
+                    </div>
+                </div>
+                <button onclick="closeEnhancedAddTeacherModal()" style="background: rgba(255,255,255,0.3); border: none; color: white; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; font-size: 1.5rem;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div style="padding: 3rem; max-width: 1200px; margin: 0 auto;">
+                <!-- Teacher Code Preview Card -->
+                <div class="code-preview-section" style="margin-bottom: 3rem; padding: 2rem; background: linear-gradient(135deg, var(--brand-primary-50) 0%, var(--brand-primary-100) 100%); border-radius: 16px; border: 3px solid var(--brand-primary-200); box-shadow: 0 8px 24px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2rem;">
+                        <div>
+                            <h4 style="margin: 0 0 1rem 0; color: var(--brand-primary-700); font-size: 1.2rem; display: flex; align-items: center; gap: 0.75rem;">
+                                <i class="fas fa-key"></i> رمز المعلم (يتم إنشاؤه تلقائياً)
+                            </h4>
+                            <div id="enhancedTeacherCodePreview" style="font-family: 'Cairo', monospace; font-size: 1.8rem; font-weight: 700; color: var(--brand-primary-800); background: white; padding: 1.25rem 2rem; border-radius: 12px; display: inline-block; min-width: 300px; border: 3px solid var(--brand-primary-300); box-shadow: 0 4px 16px rgba(0,0,0,0.12); letter-spacing: 2px;">
+                                TCHR-XXXXX-XXXX
+                            </div>
+                        </div>
+                        <button type="button" onclick="generateNewTeacherCode()" style="background: white; border: 3px solid var(--brand-primary-500); color: var(--brand-primary-600); padding: 1rem 1.75rem; border-radius: 12px; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 0.75rem; transition: all 0.3s ease; font-size: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                            <i class="fas fa-sync-alt"></i> توليد رمز جديد
+                        </button>
+                    </div>
+                    <p style="margin: 1.25rem 0 0 0; font-size: 1rem; color: var(--text-secondary); display: flex; align-items: center; gap: 0.75rem; line-height: 1.6;">
+                        <i class="fas fa-info-circle" style="color: var(--brand-primary-500); font-size: 1.1rem;"></i> 
+                        سيتم إنشاء رمز فريد تلقائياً للمعلم لاستخدامه في تسجيل الدخول إلى بوابة المعلم. يمكن نسخ الرمز واستخدامه لاحقاً.
+                    </p>
+                </div>
+                
+                <!-- Teacher Form -->
+                <form id="enhancedAddTeacherForm">
+                    <!-- Personal Information Section -->
+                    <div style="margin-bottom: 3rem; background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+                        <h4 style="color: var(--text-primary); margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 3px solid var(--neutral-200); display: flex; align-items: center; gap: 0.75rem; font-size: 1.3rem;">
+                            <i class="fas fa-user" style="color: var(--brand-primary-500); font-size: 1.4rem;"></i> 
+                            المعلومات الشخصية
+                        </h4>
+                        <div class="form-row" style="gap: 2rem;">
+                            <div class="form-group-school" style="flex: 1;">
+                                <label for="enhancedTeacherName" style="font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; font-size: 1.05rem;">
+                                    <i class="fas fa-user" style="color: var(--brand-primary-500);"></i> 
+                                    اسم المعلم <span style="color: var(--danger-500);">*</span>
+                                </label>
+                                <input type="text" id="enhancedTeacherName" class="form-input" required placeholder="أدخل الاسم الكامل الثلاثي" style="border-radius: 12px; border: 2px solid var(--neutral-300); padding: 1rem 1.25rem; transition: all 0.3s ease; font-size: 1.05rem;">
+                            </div>
+                            <div class="form-group-school" style="flex: 1;">
+                                <label for="enhancedTeacherPhone" style="font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; font-size: 1.05rem;">
+                                    <i class="fas fa-phone" style="color: var(--brand-primary-500);"></i> 
+                                    رقم الهاتف
+                                </label>
+                                <input type="tel" id="enhancedTeacherPhone" class="form-input" placeholder="01XXXXXXXXX" style="border-radius: 12px; border: 2px solid var(--neutral-300); padding: 1rem 1.25rem; transition: all 0.3s ease; direction: ltr; font-size: 1.05rem;">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row" style="gap: 2rem; margin-top: 1.5rem;">
+                            <div class="form-group-school" style="flex: 1;">
+                                <label for="enhancedTeacherEmail" style="font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; font-size: 1.05rem;">
+                                    <i class="fas fa-envelope" style="color: var(--brand-primary-500);"></i> 
+                                    البريد الإلكتروني
+                                </label>
+                                <input type="email" id="enhancedTeacherEmail" class="form-input" placeholder="example@domain.com" style="border-radius: 12px; border: 2px solid var(--neutral-300); padding: 1rem 1.25rem; transition: all 0.3s ease; direction: ltr; font-size: 1.05rem;">
+                            </div>
+                            <div class="form-group-school" style="flex: 1;">
+                                <label for="enhancedTeacherSpecialization" style="font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; font-size: 1.05rem;">
+                                    <i class="fas fa-graduation-cap" style="color: var(--brand-primary-500);"></i> 
+                                    التخصص
+                                </label>
+                                <input type="text" id="enhancedTeacherSpecialization" class="form-input" placeholder="التخصص الدقيق" style="border-radius: 12px; border: 2px solid var(--neutral-300); padding: 1rem 1.25rem; transition: all 0.3s ease; font-size: 1.05rem;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grade Level Section -->
+                    <div style="margin-bottom: 3rem; background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+                        <h4 style="color: var(--text-primary); margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 3px solid var(--neutral-200); display: flex; align-items: center; gap: 0.75rem; font-size: 1.3rem;">
+                            <i class="fas fa-layer-group" style="color: var(--brand-primary-500); font-size: 1.4rem;"></i> 
+                            المستوى الدراسي
+                        </h4>
+                        <div class="form-group-school">
+                            <label for="enhancedTeacherGradeLevel" style="font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; font-size: 1.05rem;">
+                                <i class="fas fa-school" style="color: var(--brand-primary-500);"></i> 
+                                الصف الدراسي (اختياري - يمكن تعيينه لاحقاً)
+                            </label>
+                            <select id="enhancedTeacherGradeLevel" class="form-input" style="border-radius: 12px; border: 2px solid var(--neutral-300); padding: 1rem 1.25rem; cursor: pointer; transition: all 0.3s ease; font-size: 1.05rem;">
+                                <option value="">غير محدد - يمكن تعيينه لجميع الصفوف</option>
+                            </select>
+                            <p style="margin: 0.75rem 0 0 0; font-size: 0.95rem; color: var(--text-tertiary); line-height: 1.6;">
+                                <i class="fas fa-info-circle" style="color: var(--brand-primary-500);"></i> اختيار الصف يحدد المستوى الدراسي الافتراضي للمعلم، ويمكن تغييره أو إضافة صفوف أخرى لاحقاً من خلال إدارة التعيينات
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Subject Assignment Section -->
+                    <div style="margin-bottom: 3rem; background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+                        <h4 style="color: var(--text-primary); margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 3px solid var(--neutral-200); display: flex; align-items: center; gap: 0.75rem; font-size: 1.3rem;">
+                            <i class="fas fa-book" style="color: var(--brand-primary-500); font-size: 1.4rem;"></i> 
+                            تعيين المواد <span style="color: var(--danger-500);">*</span>
+                        </h4>
+                        
+                        <!-- Subject Search -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <div style="position: relative;">
+                                <input type="text" id="enhancedSubjectSearch" class="form-input" placeholder="ابحث عن مادة دراسية..." style="width: 100%; padding-right: 3rem; border-radius: 12px; border: 2px solid var(--neutral-300); font-size: 1.05rem;" oninput="filterEnhancedSubjectCheckboxes()">
+                                <i class="fas fa-search" style="position: absolute; right: 1.25rem; top: 50%; transform: translateY(-50%); color: var(--neutral-400); font-size: 1.2rem;"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Subject Checkboxes Container -->
+                        <div id="enhancedSubjectCheckboxes" style="max-height: 350px; overflow-y: auto; border: 2px solid var(--neutral-300); border-radius: 12px; padding: 1.5rem; background: var(--neutral-50); box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);">
+                            <p style="text-align: center; color: var(--text-tertiary); margin: 0; font-size: 1.05rem;">
+                                <i class="fas fa-spinner fa-spin"></i> جارٍ تحميل المواد...
+                            </p>
+                        </div>
+                        
+                        <!-- Selected Count -->
+                        <div style="margin-top: 1.25rem; display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: linear-gradient(135deg, var(--brand-primary-50) 0%, var(--brand-primary-100) 100%); border-radius: 12px; border: 2px solid var(--brand-primary-200);">
+                            <span style="color: var(--text-primary); font-size: 1rem; font-weight: 600;">
+                                <i class="fas fa-check-circle" style="color: var(--success-500); font-size: 1.2rem;"></i> 
+                                تم اختيار <strong id="enhancedSelectedSubjectsCount" style="color: var(--brand-primary-700); font-size: 1.3rem;">0</strong> مادة
+                            </span>
+                            <button type="button" onclick="clearAllEnhancedSubjects()" style="background: white; border: 2px solid var(--danger-400); color: var(--danger-600); cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; border-radius: 10px; transition: all 0.3s ease; font-weight: 600;">
+                                <i class="fas fa-trash-alt"></i> إلغاء تحديد الكل
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div style="display: flex; gap: 1.5rem; justify-content: flex-end; padding-top: 2rem; border-top: 3px solid var(--neutral-200); margin-top: 2rem;">
+                        <button type="button" onclick="closeEnhancedAddTeacherModal()" style="padding: 1.25rem 2.5rem; border-radius: 12px; border: 2px solid var(--neutral-300); background: white; color: var(--text-secondary); font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.75rem; font-size: 1.05rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <i class="fas fa-times"></i> إلغاء
+                        </button>
+                        <button type="submit" style="padding: 1.25rem 3rem; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--success-500) 0%, var(--success-600) 100%); color: white; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.75rem; box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4); font-size: 1.05rem;">
+                            <i class="fas fa-save"></i> حفظ المعلم وتعيين المواد
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- SheetJS library for Excel export -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <script src="assets/js/school.js"></script>
+    <script src="assets/js/teacher-subject-filtering.js"></script>
+    <script src="assets/js/teacher-subject-assignment.js"></script>
+    
+    <script>
+        // School-level teacher assignment functions - Enhanced Version
+        function showTeacherAssignmentModal() {
+            // إغلاق النوافذ الأخرى أولاً
+            closeModal('gradesModal');
+            closeSubjectManagementModal();
+            if (document.getElementById('addTeacherModal')) {
+                closeModal('addTeacherModal');
+            }
+            if (document.getElementById('addGradeLevelModal')) {
+                closeModal('addGradeLevelModal');
+            }
+            
+            const modal = document.getElementById('teacherAssignmentModal');
+            modal.style.display = 'block';
+            
+            // Update stats
+            updateTeacherAssignmentStats();
+            
+            // Load data
+            loadTeachersForAssignment();
+            loadGradeLevelsForAssignmentFilter();
+            loadSubjectsForAssignmentFilter();
+            loadAllSchoolAssignments();
+            populateAssignmentSelectors();
+            switchAssignmentTab('teachers-list-tab');
+        }
+
+        function updateTeacherAssignmentStats() {
+            // Update total teachers count
+            const totalTeachersEl = document.getElementById('totalTeachersCount');
+            const filteredCountEl = document.getElementById('filteredTeachersCount');
+            if (totalTeachersEl && teachers) {
+                totalTeachersEl.textContent = teachers.length;
+            }
+            if (filteredCountEl && teachers) {
+                filteredCountEl.textContent = teachers.length;
+            }
+            
+            // Update new teachers this month (placeholder - can be enhanced with actual data)
+            const newTeachersEl = document.getElementById('newTeachersThisMonth');
+            if (newTeachersEl && teachers) {
+                // Count teachers created this month
+                const now = new Date();
+                const thisMonth = now.getMonth();
+                const thisYear = now.getFullYear();
+                const newTeachers = teachers.filter(t => {
+                    if (!t.created_at) return false;
+                    const created = new Date(t.created_at);
+                    return created.getMonth() === thisMonth && created.getFullYear() === thisYear;
+                });
+                newTeachersEl.textContent = newTeachers.length;
+            }
+        }
+
+        function switchAssignmentTab(tabId) {
+            // Hide all tab content
+            document.querySelectorAll('#teacherAssignmentModal .tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Deactivate all tabs
+            document.querySelectorAll('#teacherAssignmentModal .tab').forEach(tab => {
+                tab.classList.remove('active');
+                tab.style.background = 'transparent';
+                tab.style.color = 'var(--text-secondary)';
+            });
+            
+            // Show selected tab content
+            const selectedContent = document.getElementById(tabId);
+            if (selectedContent) {
+                selectedContent.classList.add('active');
+            }
+            
+            // Activate selected tab
+            const tabMap = {
+                'teachers-list-tab': 'tab-teachers-list',
+                'manage-assignments-tab': 'tab-manage-assignments'
+            };
+            
+            const activeTabId = tabMap[tabId];
+            if (activeTabId) {
+                const activeTab = document.getElementById(activeTabId);
+                if (activeTab) {
+                    activeTab.classList.add('active');
+                    activeTab.style.background = 'white';
+                    activeTab.style.color = 'var(--brand-primary-600)';
+                    activeTab.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                }
+            }
+        }
+
+        // Reset filters function
+        function resetTeacherFilters() {
+            const searchInput = document.getElementById('teacherAssignmentSearch');
+            const gradeFilter = document.getElementById('teacherAssignmentGradeFilter');
+            const subjectFilter = document.getElementById('teacherAssignmentSubjectFilter');
+            
+            if (searchInput) searchInput.value = '';
+            if (gradeFilter) gradeFilter.value = '';
+            if (subjectFilter) subjectFilter.value = '';
+            
+            filterTeachersForAssignment();
+            
+            // Show feedback
+            showNotification('تم إعادة تعيين عوامل التصفية', 'info');
+        }
+
+        // Open add teacher modal from assignment interface
+        function openAddTeacherFromAssignment() {
+            closeTeacherAssignmentModal();
+            setTimeout(() => {
+                showEnhancedAddTeacherModal();
+            }, 300);
+        }
+
+        async function loadAllSchoolAssignments() {
+            if (!currentSchool) {
+                console.warn('Cannot load assignments: currentSchool is not set');
+                return;
+            }
+            
+            console.log('Loading assignments for school:', currentSchool.id);
+            
+            try {
+                const response = await fetch(`/api/school/${currentSchool.id}/teacher-class-assignments`, {
+                    headers: getAuthHeaders()
+                });
+                const result = await response.json();
+                
+                console.log('Assignments API response:', result);
+                
+                if (result.success && Array.isArray(result.assignments)) {
+                    renderAllAssignments(result.assignments);
+                    // Update total assignments count in stats
+                    const totalAssignmentsEl = document.getElementById('totalAssignmentsCount');
+                    if (totalAssignmentsEl) {
+                        totalAssignmentsEl.textContent = result.assignments.length;
+                    }
+                } else {
+                    // Handle case when API returns success: false or assignments is not an array
+                    renderAllAssignments([]);
+                    if (!result.success) {
+                        console.warn('API returned success: false', result.error);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading assignments:', error);
+                renderAllAssignments([]);
+            }
+        }
+
+        function renderAllAssignments(assignments) {
+            const tbody = document.getElementById('allAssignmentsTableBody');
+            const countSpan = document.getElementById('allAssignmentsCount');
+            const emptyState = document.getElementById('assignmentsEmptyState');
+            const tableContainer = document.querySelector('.current-assignments-section .table-responsive');
+            
+            if (!tbody || !countSpan) return;
+            
+            countSpan.textContent = assignments.length;
+            
+            // Handle empty state
+            if (assignments.length === 0) {
+                tbody.innerHTML = '';
+                if (emptyState) emptyState.style.display = 'block';
+                if (tableContainer) tableContainer.style.display = 'none';
+                return;
+            }
+            
+            if (emptyState) emptyState.style.display = 'none';
+            if (tableContainer) tableContainer.style.display = 'block';
+            
+            let html = '';
+            assignments.forEach((assign, index) => {
+                html += `
+                    <tr style="transition: background-color 0.2s ease;" onmouseover="this.style.backgroundColor='var(--neutral-50)'" onmouseout="this.style.backgroundColor='transparent'">
+                        <td class="td-school" style="font-weight: 600;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="width: 30px; height: 30px; background: linear-gradient(135deg, var(--brand-primary-500) 0%, var(--brand-primary-600) 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem;">
+                                    ${assign.teacher_name ? assign.teacher_name.charAt(0) : '?'}
+                                </div>
+                                ${escapeHtml(assign.teacher_name)}
+                            </div>
+                        </td>
+                        <td class="td-school">
+                            <code style="background: var(--neutral-100); padding: 0.3rem 0.6rem; border-radius: 6px; font-family: monospace; font-size: 0.85rem; color: var(--text-secondary);">${escapeHtml(assign.teacher_code)}</code>
+                        </td>
+                        <td class="td-school">
+                            <span style="display: inline-flex; align-items: center; gap: 0.25rem; background: var(--brand-primary-100); color: var(--brand-primary-700); padding: 0.3rem 0.75rem; border-radius: 15px; font-size: 0.85rem;">
+                                <i class="fas fa-book" style="font-size: 0.75rem;"></i>
+                                ${escapeHtml(assign.subject_name)}
+                            </span>
+                        </td>
+                        <td class="td-school">
+                            <span style="display: inline-flex; align-items: center; gap: 0.25rem; background: var(--warning-100); color: var(--warning-700); padding: 0.3rem 0.75rem; border-radius: 15px; font-size: 0.85rem;">
+                                <i class="fas fa-layer-group" style="font-size: 0.75rem;"></i>
+                                ${assign.class_name}
+                            </span>
+                        </td>
+                        <td class="td-school" style="text-align: center;">
+                            <button class="btn-small btn-danger" onclick="deleteAssignment(${assign.id})" title="حذف التعيين" style="background: linear-gradient(135deg, var(--danger-500) 0%, var(--danger-600) 100%); border: none; padding: 0.5rem 1rem; border-radius: 8px; color: white; cursor: pointer; display: inline-flex; align-items: center; gap: 0.25rem; transition: all 0.3s ease;">
+                                <i class="fas fa-trash"></i> حذف
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        async function deleteAssignment(assignmentId) {
+            if (!confirm('هل أنت متأكد من حذف هذا التعيين؟')) return;
+            
+            try {
+                const response = await fetch(`/api/teacher-class-assignment/${assignmentId}`, {
+                    method: 'DELETE',
+                    headers: getAuthHeaders()
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('تم حذف التعيين بنجاح', 'success');
+                    loadAllSchoolAssignments();
+                    if (typeof fetchTeachers === 'function') fetchTeachers();
+                }
+            } catch (error) {
+                console.error('Error deleting assignment:', error);
+                showNotification('حدث خطأ في الاتصال بالخادم', 'error');
+            }
+        }
+
+        function populateAssignmentSelectors() {
+            const teacherSelect = document.getElementById('assignTeacherSelect');
+            const subjectSelect = document.getElementById('assignSubjectSelect');
+            const gradeSelect = document.getElementById('assignGradeSelect');
+            
+            if (!teacherSelect || !subjectSelect || !gradeSelect) return;
+            
+            // Populate Teachers
+            teacherSelect.innerHTML = '<option value="">اختر معلم</option>';
+            teachers.forEach(t => {
+                const option = document.createElement('option');
+                option.value = t.id;
+                option.textContent = `${t.full_name} (${t.teacher_code})`;
+                teacherSelect.appendChild(option);
+            });
+            
+            // Populate Subjects
+            subjectSelect.innerHTML = '<option value="">اختر مادة</option>';
+            subjects.forEach(s => {
+                const option = document.createElement('option');
+                option.value = s.id;
+                const gradeInfo = s.grade_level ? ` - ${escapeHtml(s.grade_level)}` : ' (عامة)';
+                option.textContent = `${s.name}${gradeInfo}`;
+                subjectSelect.appendChild(option);
+            });
+            
+            // Populate Grades
+            gradeSelect.innerHTML = '<option value="">اختر صف</option>';
+            gradeLevels.forEach(g => {
+                const option = document.createElement('option');
+                option.value = g;
+                option.textContent = g;
+                gradeSelect.appendChild(option);
+            });
+        }
+
+        async function createNewAssignment(event) {
+            event.preventDefault();
+            const teacherId = document.getElementById('assignTeacherSelect').value;
+            const subjectId = document.getElementById('assignSubjectSelect').value;
+            const className = document.getElementById('assignGradeSelect').value;
+            
+            if (!teacherId || !subjectId || !className) {
+                showNotification('يرجى ملء جميع الحقول المطلوبة', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/teacher-class-assignment', {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({
+                        teacher_id: teacherId,
+                        subject_id: subjectId,
+                        class_name: className
+                    })
+                });
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showNotification('تم إضافة التعيين بنجاح', 'success');
+                    loadAllSchoolAssignments();
+                    if (typeof fetchTeachers === 'function') fetchTeachers();
+                } else {
+                    showNotification(result.error_ar || result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Error creating assignment:', error);
+                showNotification('حدث خطأ في الاتصال بالخادم', 'error');
+            }
+        }
+
+        function closeTeacherAssignmentModal() {
+            document.getElementById('teacherAssignmentModal').style.display = 'none';
+        }
+
+        function loadTeachersForAssignment() {
+            const tbody = document.getElementById('assignmentTeachersTableBody');
+            const emptyState = document.getElementById('teachersEmptyState');
+            const tableContainer = document.querySelector('.teachers-assignment-section .table-responsive');
+            
+            if (!tbody) return;
+            
+            // Handle empty state
+            if (!teachers || teachers.length === 0) {
+                if (emptyState) emptyState.style.display = 'block';
+                if (tableContainer) tableContainer.style.display = 'none';
+                updateFilteredCount(0);
+                return;
+            }
+            
+            if (emptyState) emptyState.style.display = 'none';
+            if (tableContainer) tableContainer.style.display = 'block';
+
+            let html = '';
+            teachers.forEach((teacher, index) => {
+                const subjectNames = teacher.subjects && teacher.subjects.length > 0 
+                    ? teacher.subjects.map(s => `<span class="subject-tag" style="display: inline-block; background: var(--brand-primary-100); color: var(--brand-primary-700); padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.8rem; margin: 0.1rem;">${escapeHtml(s.name)}</span>`).join(' ')
+                    : teacher.subject_names 
+                        ? teacher.subject_names.split(', ').map(s => `<span class="subject-tag" style="display: inline-block; background: var(--neutral-200); color: var(--text-secondary); padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.8rem; margin: 0.1rem;">${s}</span>`).join(' ')
+                        : '<span style="color: var(--text-tertiary); font-style: italic;">لم تحدد مواد</span>';
+
+                html += `
+                    <tr style="transition: background-color 0.2s ease;" onmouseover="this.style.backgroundColor='var(--neutral-50)'" onmouseout="this.style.backgroundColor='transparent'">
+                        <td class="td-school" style="text-align: center;">
+                            <input type="checkbox" class="teacher-assignment-checkbox" data-teacher-id="${teacher.id}" style="cursor: pointer; width: 18px; height: 18px;">
+                        </td>
+                        <td class="td-school" style="font-weight: 600;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="width: 35px; height: 35px; background: linear-gradient(135deg, var(--brand-primary-500) 0%, var(--brand-primary-600) 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem;">
+                                    ${teacher.full_name.charAt(0)}
+                                </div>
+                                ${escapeHtml(teacher.full_name)}
+                            </div>
+                        </td>
+                        <td class="td-school">${subjectNames}</td>
+                        <td class="td-school">
+                            ${teacher.grade_level ? `<span style="background: var(--warning-100); color: var(--warning-700); padding: 0.3rem 0.75rem; border-radius: 15px; font-size: 0.85rem;">${escapeHtml(teacher.grade_level)}</span>` : '-'}
+                        </td>
+                        <td class="td-school">
+                            <code style="background: var(--neutral-100); padding: 0.3rem 0.6rem; border-radius: 6px; font-family: monospace; font-size: 0.85rem; color: var(--text-secondary);">${escapeHtml(teacher.teacher_code)}</code>
+                        </td>
+                        <td class="td-school" style="direction: ltr; text-align: right;">${teacher.email || '<span style="color: var(--text-tertiary);">-</span>'}</td>
+                        <td class="td-school" style="direction: ltr; text-align: right;">${teacher.phone || '<span style="color: var(--text-tertiary);">-</span>'}</td>
+                        <td class="td-school" style="text-align: center;">
+                            <div style="display: flex; gap: 0.3rem; justify-content: center; flex-wrap: wrap;">
+                                <button class="btn-small btn-danger" onclick="deleteTeacher(${teacher.id})" style="margin: 0.1rem; display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.5rem 1rem; border-radius: 8px;" title="حذف - لحذف المعلم من النظام">
+                                    <i class="fas fa-trash"></i> حذف
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+            updateFilteredCount(teachers.length);
+        }
+
+        function updateFilteredCount(count) {
+            const countEl = document.getElementById('filteredTeachersCount');
+            if (countEl) {
+                countEl.textContent = count;
+            }
+        }
+
+        function loadGradeLevelsForAssignmentFilter() {
+            const gradeFilter = document.getElementById('teacherAssignmentGradeFilter');
+            if (!gradeFilter || !gradeSubjects) return;
+
+            // Clear existing options except the first one
+            gradeFilter.innerHTML = '<option value="">جميع الصفوف</option>';
+
+            // Get unique grade levels
+            const gradeLevels = Object.keys(gradeSubjects).filter(level => gradeSubjects[level].length > 0);
+
+            gradeLevels.forEach(gradeLevel => {
+                const option = document.createElement('option');
+                option.value = gradeLevel;
+                option.textContent = gradeLevel;
+                gradeFilter.appendChild(option);
+            });
+        }
+
+        function loadSubjectsForAssignmentFilter() {
+            const subjectFilter = document.getElementById('teacherAssignmentSubjectFilter');
+            if (!subjectFilter || !subjects) return;
+
+            // Clear existing options except the first one
+            subjectFilter.innerHTML = '<option value="">جميع المواد</option>';
+
+            // Get unique subjects
+            const uniqueSubjects = [...new Set(subjects.map(subject => subject.name))];
+
+            uniqueSubjects.forEach(subjectName => {
+                const option = document.createElement('option');
+                option.value = subjectName;
+                option.textContent = subjectName;
+                subjectFilter.appendChild(option);
+            });
+        }
+
+        function filterTeachersForAssignment() {
+            const searchInput = document.getElementById('teacherAssignmentSearch');
+            const gradeFilter = document.getElementById('teacherAssignmentGradeFilter');
+            const subjectFilter = document.getElementById('teacherAssignmentSubjectFilter');
+            const tbody = document.getElementById('assignmentTeachersTableBody');
+
+            if (!searchInput || !gradeFilter || !subjectFilter || !tbody) return;
+
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const selectedGrade = gradeFilter.value;
+            const selectedSubject = subjectFilter.value;
+
+            // Filter teachers
+            let filteredTeachers = teachers || [];
+
+            // Apply search filter
+            if (searchTerm) {
+                filteredTeachers = filteredTeachers.filter(teacher => 
+                    teacher.full_name.toLowerCase().includes(searchTerm) ||
+                    teacher.teacher_code.toLowerCase().includes(searchTerm) ||
+                    (teacher.email && teacher.email.toLowerCase().includes(searchTerm)) ||
+                    (teacher.phone && teacher.phone.includes(searchTerm))
+                );
+            }
+
+            // Apply grade filter
+            if (selectedGrade) {
+                filteredTeachers = filteredTeachers.filter(teacher => 
+                    teacher.grade_level === selectedGrade
+                );
+            }
+
+            // Apply subject filter
+            if (selectedSubject) {
+                filteredTeachers = filteredTeachers.filter(teacher => {
+                    if (teacher.subjects && teacher.subjects.length > 0) {
+                        return teacher.subjects.some(subject => subject.name === selectedSubject);
+                    } else if (teacher.subject_names) {
+                        return teacher.subject_names.includes(selectedSubject);
+                    }
+                    return false;
+                });
+            }
+
+            // Update table
+            let html = '';
+            filteredTeachers.forEach(teacher => {
+                const subjectNames = teacher.subjects && teacher.subjects.length > 0 
+                    ? teacher.subjects.map(s => `<span class="subject-tag" style="display: inline-block; background: var(--brand-primary-100); color: var(--brand-primary-700); padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.8rem; margin: 0.1rem;">${escapeHtml(s.name)}</span>`).join(' ')
+                    : teacher.subject_names 
+                        ? teacher.subject_names.split(', ').map(s => `<span class="subject-tag" style="display: inline-block; background: var(--neutral-200); color: var(--text-secondary); padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.8rem; margin: 0.1rem;">${s}</span>`).join(' ')
+                        : '<span style="color: var(--text-tertiary); font-style: italic;">لم تحدد مواد</span>';
+
+                html += `
+                    <tr style="transition: background-color 0.2s ease;" onmouseover="this.style.backgroundColor='var(--neutral-50)'" onmouseout="this.style.backgroundColor='transparent'">
+                        <td class="td-school" style="text-align: center;">
+                            <input type="checkbox" class="teacher-assignment-checkbox" data-teacher-id="${teacher.id}" style="cursor: pointer; width: 18px; height: 18px;">
+                        </td>
+                        <td class="td-school" style="font-weight: 600;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="width: 35px; height: 35px; background: linear-gradient(135deg, var(--brand-primary-500) 0%, var(--brand-primary-600) 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem;">
+                                    ${teacher.full_name.charAt(0)}
+                                </div>
+                                ${escapeHtml(teacher.full_name)}
+                            </div>
+                        </td>
+                        <td class="td-school">${subjectNames}</td>
+                        <td class="td-school">
+                            ${teacher.grade_level ? `<span style="background: var(--warning-100); color: var(--warning-700); padding: 0.3rem 0.75rem; border-radius: 15px; font-size: 0.85rem;">${escapeHtml(teacher.grade_level)}</span>` : '-'}
+                        </td>
+                        <td class="td-school">
+                            <code style="background: var(--neutral-100); padding: 0.3rem 0.6rem; border-radius: 6px; font-family: monospace; font-size: 0.85rem; color: var(--text-secondary);">${escapeHtml(teacher.teacher_code)}</code>
+                        </td>
+                        <td class="td-school" style="direction: ltr; text-align: right;">${teacher.email || '<span style="color: var(--text-tertiary);">-</span>'}</td>
+                        <td class="td-school" style="direction: ltr; text-align: right;">${teacher.phone || '<span style="color: var(--text-tertiary);">-</span>'}</td>
+                        <td class="td-school" style="text-align: center;">
+                            <div style="display: flex; gap: 0.3rem; justify-content: center; flex-wrap: wrap;">
+                                <button class="btn-small btn-danger" onclick="deleteTeacher(${teacher.id})" style="margin: 0.1rem; display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.5rem 1rem; border-radius: 8px;" title="حذف - لحذف المعلم من النظام">
+                                    <i class="fas fa-trash"></i> حذف
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+            updateFilteredCount(filteredTeachers.length);
+            
+            // Show empty state if no results
+            const emptyState = document.getElementById('teachersEmptyState');
+            const tableContainer = document.querySelector('.teachers-assignment-section .table-responsive');
+            
+            if (filteredTeachers.length === 0) {
+                if (emptyState) {
+                    emptyState.style.display = 'block';
+                    emptyState.querySelector('h4').textContent = 'لا توجد نتائج';
+                    emptyState.querySelector('p').textContent = 'لم يتم العثور على معلمين مطابقين لمعايير البحث';
+                }
+                if (tableContainer) tableContainer.style.display = 'none';
+            } else {
+                if (emptyState) emptyState.style.display = 'none';
+                if (tableContainer) tableContainer.style.display = 'block';
+            }
+        }
+
+        function selectAllTeachersForAssignment() {
+            document.querySelectorAll('.teacher-assignment-checkbox').forEach(checkbox => {
+                checkbox.checked = true;
+            });
+        }
+
+        function clearAllTeachersForAssignment() {
+            document.querySelectorAll('.teacher-assignment-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+
+        function toggleSelectAllAssignmentTeachers() {
+            const selectAllCheckbox = document.getElementById('selectAllAssignmentCheckbox');
+            const checkboxes = document.querySelectorAll('.teacher-assignment-checkbox');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        }
+
+        function manageTeacherSubjectsBulk() {
+            const selectedCheckboxes = document.querySelectorAll('.teacher-assignment-checkbox:checked');
+            if (selectedCheckboxes.length === 0) {
+                showNotification('الرجاء تحديد معلم واحد على الأقل', 'warning');
+                return;
+            }
+
+            // Get the first selected teacher to open the subject assignment interface
+            const firstTeacherId = parseInt(selectedCheckboxes[0].dataset.teacherId);
+            if (firstTeacherId) {
+                // Close the teacher assignment modal first
+                closeTeacherAssignmentModal();
+                // Then load the subject assignment interface
+                loadTeacherSubjectAssignment(firstTeacherId);
+            }
+        }
+
+        // Ensure the close functionality works for the new modal
+        window.onclick = function(event) {
+            const assignmentModal = document.getElementById('teacherAssignmentModal');
+            const enhancedAddTeacherModal = document.getElementById('enhancedAddTeacherModal');
+            if (event.target === assignmentModal) {
+                closeTeacherAssignmentModal();
+            }
+            if (event.target === enhancedAddTeacherModal) {
+                closeEnhancedAddTeacherModal();
+            }
+        }
+
+        // ==========================================
+        // ENHANCED ADD TEACHER MODAL FUNCTIONS
+        // ==========================================
+        
+        let enhancedCurrentTeacherCode = '';
+        let enhancedAvailableSubjects = [];
+        
+        function showEnhancedAddTeacherModal() {
+            const modal = document.getElementById('enhancedAddTeacherModal');
+            const form = document.getElementById('enhancedAddTeacherForm');
+            
+            // Reset form
+            if (form) form.reset();
+            
+            // Generate initial code preview
+            generateNewTeacherCode();
+            
+            // Populate grade level options
+            populateEnhancedTeacherGradeLevelOptions();
+            
+            // Load subjects
+            loadEnhancedSubjectCheckboxes();
+            
+            // Focus on name field
+            setTimeout(() => {
+                const nameField = document.getElementById('enhancedTeacherName');
+                if (nameField) nameField.focus();
+            }, 100);
+            
+            // Show modal
+            modal.style.display = 'block';
+        }
+        
+        function closeEnhancedAddTeacherModal() {
+            const modal = document.getElementById('enhancedAddTeacherModal');
+            modal.style.display = 'none';
+            
+            // Clear selected subjects
+            enhancedAvailableSubjects = [];
+        }
+        
+        function generateNewTeacherCode() {
+            const timestamp = Date.now().toString(36).toUpperCase();
+            const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+            enhancedCurrentTeacherCode = `TCHR-${timestamp}-${random}`;
+            
+            const codePreview = document.getElementById('enhancedTeacherCodePreview');
+            if (codePreview) {
+                codePreview.textContent = enhancedCurrentTeacherCode;
+                // Add animation effect
+                codePreview.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    codePreview.style.transform = 'scale(1)';
+                }, 200);
+            }
+        }
+        
+        function populateEnhancedTeacherGradeLevelOptions() {
+            const select = document.getElementById('enhancedTeacherGradeLevel');
+            if (!select || !gradeLevels) return;
+            
+            // Keep the first option
+            select.innerHTML = '<option value="">غير محدد - يمكن تعيينه لجميع الصفوف</option>';
+            
+            gradeLevels.forEach(level => {
+                const option = document.createElement('option');
+                option.value = level;
+                option.textContent = level;
+                select.appendChild(option);
+            });
+        }
+        
+        async function loadEnhancedSubjectCheckboxes() {
+            const container = document.getElementById('enhancedSubjectCheckboxes');
+            if (!container) return;
+            
+            container.innerHTML = '<p style="text-align: center; color: var(--text-tertiary); margin: 0;"><i class="fas fa-spinner fa-spin"></i> جارٍ تحميل المواد...</p>';
+            
+            if (!currentSchool || !currentSchool.id) {
+                container.innerHTML = '<p style="text-align: center; color: var(--danger-500); margin: 0;"><i class="fas fa-exclamation-circle"></i> خطأ: المدرسة غير محددة</p>';
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/school/${currentSchool.id}/subjects`, {
+                    headers: getAuthHeaders()
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch subjects');
+                }
+                
+                const result = await response.json();
+                enhancedAvailableSubjects = result.subjects || [];
+                
+                renderEnhancedSubjectCheckboxes(enhancedAvailableSubjects);
+            } catch (error) {
+                console.error('Error loading subjects:', error);
+                container.innerHTML = '<p style="text-align: center; color: var(--danger-500); margin: 0;"><i class="fas fa-exclamation-circle"></i> فشل تحميل المواد</p>';
+            }
+        }
+        
+        function renderEnhancedSubjectCheckboxes(subjects) {
+            const container = document.getElementById('enhancedSubjectCheckboxes');
+            if (!container) return;
+            
+            if (subjects.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 2rem;">
+                        <i class="fas fa-book" style="font-size: 2rem; color: var(--neutral-400); margin-bottom: 0.5rem; display: block;"></i>
+                        <p style="color: var(--text-tertiary); margin: 0;">لا توجد مواد متاحة</p>
+                        <button onclick="showSubjectManagementModal()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--brand-primary-500); color: white; border: none; border-radius: 6px; cursor: pointer;">
+                            <i class="fas fa-plus"></i> إضافة مواد
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Group subjects by grade level
+            const groupedSubjects = {};
+            subjects.forEach(subject => {
+                const grade = subject.grade_level || 'عام';
+                if (!groupedSubjects[grade]) {
+                    groupedSubjects[grade] = [];
+                }
+                groupedSubjects[grade].push(subject);
+            });
+            
+            let html = '';
+            Object.keys(groupedSubjects).sort().forEach(grade => {
+                html += `
+                    <div style="margin-bottom: 1rem;">
+                        <h5 style="margin: 0 0 0.5rem 0; color: var(--brand-primary-600); font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-layer-group"></i> ${grade}
+                        </h5>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.5rem;">
+                `;
+                
+                groupedSubjects[grade].forEach(subject => {
+                    html += `
+                        <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; background: white; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; border: 1px solid var(--neutral-200);" onmouseover="this.style.borderColor='var(--brand-primary-300)'" onmouseout="this.style.borderColor='var(--neutral-200)'">
+                            <input type="checkbox" name="enhanced_teacher_subjects" value="${subject.id}" onchange="updateEnhancedSelectedCount()" style="width: 18px; height: 18px; cursor: pointer;">
+                            <span style="font-size: 0.9rem;">${escapeHtml(subject.name)}</span>
+                        </label>
+                    `;
+                });
+                
+                html += '</div></div>';
+            });
+            
+            container.innerHTML = html;
+            updateEnhancedSelectedCount();
+        }
+        
+        function filterEnhancedSubjectCheckboxes() {
+            const searchInput = document.getElementById('enhancedSubjectSearch');
+            if (!searchInput) return;
+            
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            if (!searchTerm) {
+                renderEnhancedSubjectCheckboxes(enhancedAvailableSubjects);
+                return;
+            }
+            
+            const filtered = enhancedAvailableSubjects.filter(subject => 
+                subject.name.toLowerCase().includes(searchTerm) ||
+                (subject.grade_level && subject.grade_level.toLowerCase().includes(searchTerm))
+            );
+            
+            renderEnhancedSubjectCheckboxes(filtered);
+        }
+        
+        function updateEnhancedSelectedCount() {
+            const checkboxes = document.querySelectorAll('input[name="enhanced_teacher_subjects"]:checked');
+            const countEl = document.getElementById('enhancedSelectedSubjectsCount');
+            if (countEl) {
+                countEl.textContent = checkboxes.length;
+            }
+        }
+        
+        function clearAllEnhancedSubjects() {
+            const checkboxes = document.querySelectorAll('input[name="enhanced_teacher_subjects"]');
+            checkboxes.forEach(cb => cb.checked = false);
+            updateEnhancedSelectedCount();
+        }
+        
+        // Form submission handler
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('enhancedAddTeacherForm');
+            if (form) {
+                form.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    await saveEnhancedTeacher();
+                });
+            }
+        });
+        
+        async function saveEnhancedTeacher() {
+            // Get form values
+            const name = document.getElementById('enhancedTeacherName').value.trim();
+            const phone = document.getElementById('enhancedTeacherPhone').value.trim();
+            const email = document.getElementById('enhancedTeacherEmail').value.trim();
+            const specialization = document.getElementById('enhancedTeacherSpecialization').value.trim();
+            const gradeLevel = document.getElementById('enhancedTeacherGradeLevel').value;
+            
+            // Get selected subjects
+            const selectedSubjects = Array.from(document.querySelectorAll('input[name="enhanced_teacher_subjects"]:checked'))
+                .map(cb => parseInt(cb.value));
+            
+            // Validation
+            if (!name) {
+                showNotification('يرجى إدخال اسم المعلم', 'error');
+                document.getElementById('enhancedTeacherName').focus();
+                return;
+            }
+            
+            if (selectedSubjects.length === 0) {
+                showNotification('يرجى اختيار مادة واحدة على الأقل', 'error');
+                document.getElementById('enhancedSubjectCheckboxes').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            
+            // Email validation
+            if (email && !isValidEmail(email)) {
+                showNotification('يرجى إدخال بريد إلكتروني صحيح', 'error');
+                document.getElementById('enhancedTeacherEmail').focus();
+                return;
+            }
+            
+            // Phone validation
+            if (phone && !isValidPhone(phone)) {
+                showNotification('يرجى إدخال رقم هاتف صحيح', 'error');
+                document.getElementById('enhancedTeacherPhone').focus();
+                return;
+            }
+            
+            // Prepare data
+            const teacherData = {
+                full_name: name,
+                phone: phone || null,
+                email: email || null,
+                specialization: specialization || null,
+                grade_level: gradeLevel || null,
+                subject_ids: selectedSubjects,
+                teacher_code: enhancedCurrentTeacherCode
+            };
+            
+            // Show loading state
+            const submitBtn = document.querySelector('#enhancedAddTeacherForm button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
+            
+            try {
+                const response = await fetch(`/api/school/${currentSchool.id}/teacher`, {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify(teacherData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    showNotification(`تم إضافة المعلم ${name} بنجاح`, 'success');
+                    
+                    // Close modal
+                    closeEnhancedAddTeacherModal();
+                    
+                    // Refresh teachers list
+                    await fetchTeachers();
+                    
+                    // Refresh assignment modal if open
+                    if (document.getElementById('teacherAssignmentModal').style.display === 'block') {
+                        loadTeachersForAssignment();
+                        updateTeacherAssignmentStats();
+                    }
+                } else {
+                    const errorMsg = result.error_ar || result.error || 'حدث خطأ أثناء إضافة المعلم';
+                    showNotification(errorMsg, 'error');
+                }
+            } catch (error) {
+                console.error('Error saving teacher:', error);
+                showNotification('حدث خطأ في الاتصال بالخادم', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        }
+        
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        function isValidPhone(phone) {
+            const re = /^[\d\+\-\s\(\)]{8,}$/;
+            return re.test(phone);
+        }
+    </script>
+</body>
+</html>

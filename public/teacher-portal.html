@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة المعلم - EduFlow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/unified-design-system.css">
+    <link rel="stylesheet" href="assets/css/unified-components.css">
+    <link rel="stylesheet" href="assets/css/responsive-utilities.css">
+    <link rel="stylesheet" href="assets/css/accessibility-enhancements.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/enhanced.css">
+    <link rel="stylesheet" href="assets/css/teacher-portal-enhanced.css">
+    <link rel="stylesheet" href="assets/css/design-system.css">
+    
+    <style>
+        /* Ensure consistent color scheme matching other portals */
+        :root {
+            /* Primary Brand Colors - Blue scheme to match other portals */
+            --brand-primary-50: #eff6ff;
+            --brand-primary-100: #dbeafe;
+            --brand-primary-200: #bfdbfe;
+            --brand-primary-300: #93c5fd;
+            --brand-primary-400: #60a5fa;
+            --brand-primary-500: #3b82f6;
+            --brand-primary-600: #2563eb;
+            --brand-primary-700: #1d4ed8;
+            --brand-primary-800: #1e40af;
+            --brand-primary-900: #1e3a8a;
+            
+            /* Gradients - Unified blue scheme */
+            --gradient-primary: linear-gradient(135deg, var(--brand-primary-500) 0%, var(--brand-primary-700) 100%);
+            --gradient-secondary: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%);
+            --gradient-success: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+            --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
+            --gradient-danger: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+            
+            /* Background and text colors - WHITE background to match other portals */
+            --background-primary: #ffffff;
+            --background-secondary: #ffffff;
+            --background-tertiary: #f9fafb;
+            --surface-primary: #ffffff;
+            --surface-secondary: #ffffff;
+            --surface-elevated: #ffffff;
+            --text-primary: #111827;
+            --text-secondary: #374151;
+            --neutral-300: #d1d5db;
+            --success-500: #22c55e;
+            --danger-700: #b91c1c;
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--gradient-primary);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+        
+        .login-icon {
+            font-size: 3.5rem;
+            color: var(--brand-primary-600);
+            margin-bottom: 1.5rem;
+        }
+        
+        .login-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .login-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: right;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--neutral-300);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--brand-primary-500);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .btn-login {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem; /* Standard size */
+            font-size: 0.875rem; /* Match unified system */
+            font-weight: 600;
+            border-radius: 0.5rem; /* Match unified system */
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            min-height: 44px; /* Accessibility */
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-login:active {
+            transform: translateY(0);
+        }
+        
+        .portal-container {
+            display: none;
+            background: var(--background-secondary);
+            min-height: 100vh;
+        }
+        
+        .portal-header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .portal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .teacher-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .btn-logout {
+            background: var(--gradient-danger);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem; /* Match unified system */
+            border-radius: 0.5rem; /* Match unified system */
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-height: 44px; /* Accessibility */
+        }
+        
+        .btn-logout:hover {
+            background: var(--danger-700);
+        }
+        
+        .portal-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .card-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .card-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        .subjects-list {
+            margin-top: 1rem;
+        }
+        
+        .subject-item {
+            background: var(--background-secondary);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .subject-name {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .subject-grade {
+            background: var(--brand-primary-600);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .btn-primary-portal {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem; /* Match unified system */
+            border-radius: 0.5rem; /* Match unified system */
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-height: 44px; /* Accessibility */
+        }
+        
+        .btn-primary-portal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        .table-portal {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        .th-portal, .td-portal {
+            padding: 0.8rem 1rem;
+            text-align: right;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .th-portal {
+            background: var(--background-secondary);
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .td-portal {
+            color: var(--text-secondary);
+        }
+        
+        .btn-small-portal {
+            padding: 0.5rem 1rem; /* Match unified btn-sm */
+            border-radius: 0.375rem; /* Match unified btn-sm */
+            border: none;
+            cursor: pointer;
+            font-size: 0.75rem; /* Match unified btn-sm */
+            font-weight: 600;
+            margin: 0 0.25rem; /* Standardize spacing */
+            min-height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-info-portal {
+            background: var(--gradient-secondary);
+            color: white;
+        }
+        
+        .btn-success-portal {
+            background: var(--gradient-success);
+            color: white;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification-success {
+            background: var(--gradient-success);
+        }
+        
+        .notification-error {
+            background: var(--gradient-danger);
+        }
+        
+        .notification-info {
+            background: var(--gradient-secondary);
+        }
+        
+        @media (max-width: 768px) {
+            .portal-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+    <script src="assets/js/security-utils.js"></script>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-card">
+            <div class="login-icon">
+                <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+            <h1 class="login-title">بوابة المعلم</h1>
+            <p class="login-subtitle">يرجى إدخال رمز المعلم لتسجيل الدخول</p>
+            
+            <!-- Code Format Information -->
+            <div class="code-info" style="background: var(--brand-primary-50); padding: 1rem; border-radius: 8px; margin: 1rem 0; border-left: 4px solid var(--brand-primary-500);">
+                <h4 style="margin: 0 0 0.5rem 0; color: var(--brand-primary-700); font-size: 1rem;">
+                    <i class="fas fa-info-circle"></i> تنسيق رمز المعلم
+                </h4>
+                <p style="margin: 0; font-size: 0.9rem; color: #555;">
+                    الرمز يتكون من: <code style="background: white; padding: 0.2rem 0.5rem; border-radius: 4px;">TCHR-XXXXX-XXXX</code>
+                </p>
+                <p style="margin: 0.5rem 0 0 0; font-size: 0.85rem; color: #666;">
+                    يتم إنشاء هذا الرمز تلقائياً عند إضافة المعلم من قبل الإدارة المدرسية
+                </p>
+            </div>
+            
+            <form id="teacherLoginForm">
+                <div class="form-group">
+                    <label for="teacherCode" class="form-label">
+                        <i class="fas fa-key"></i> رمز المعلم
+                    </label>
+                    <input type="text" id="teacherCode" class="form-input" placeholder="أدخل رمز المعلم" required>
+                    <div class="input-hint" style="font-size: 0.8rem; color: #666; margin-top: 0.3rem;">
+                        أدخل الرمز المكون من 14 حرفاً بالتنسيق الموضح أعلاه
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="teacherPassword" class="form-label">
+                        <i class="fas fa-lock"></i> كلمة المرور
+                    </label>
+                    <input type="password" id="teacherPassword" class="form-input" placeholder="أدخل كلمة المرور (إن وجدت)" autocomplete="current-password">
+                </div>
+                
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                </button>
+            </form>
+            
+            <!-- Help Section -->
+            <div class="help-section" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #eee;">
+                <p style="font-size: 0.9rem; color: #666; margin: 0;">
+                    <i class="fas fa-question-circle"></i> هل نسيت رمز المعلم؟
+                    <br>
+                    <span style="font-size: 0.85rem;">يرجى التواصل مع إدارة المدرسة للحصول على الرمز</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Portal Dashboard -->
+    <div id="portalScreen" class="portal-container">
+        <header class="portal-header dashboard-header teacher">
+            <h1 class="portal-title">
+                <i class="fas fa-chalkboard-teacher"></i> بوابة المعلم
+            </h1>
+            <div class="teacher-info">
+                <span id="teacherName"></span>
+                <button class="btn-logout" onclick="logoutTeacher()">
+                    <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                </button>
+            </div>
+        </header>
+        
+        <main class="portal-content">
+            <!-- Dashboard Overview -->
+            <div class="dashboard-grid">
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--brand-primary-100); color: var(--brand-primary-600);">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h3 class="card-title">المواد المعينة</h3>
+                    </div>
+                    <div class="card-content">
+                        <div id="subjectsOverview">
+                            جارٍ تحميل المواد...
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--success-100); color: var(--success-600);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 class="card-title">عدد الطلاب</h3>
+                    </div>
+                    <div class="card-content">
+                        <div id="studentsCount">0</div>
+                        <p>طالب في المواد المعينة لك</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--brand-primary-100); color: var(--brand-primary-600);">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 class="card-title">الإحصائيات</h3>
+                    </div>
+                    <div class="card-content">
+                        <p>معدل الحضور: <span id="attendanceRate">0%</span></p>
+                        <p>معدل الدرجات: <span id="gradesAverage">0</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Grade Recommendations Section -->
+            <div class="section-card" id="gradeRecommendationsSection">
+                <h2 class="section-title">
+                    <i class="fas fa-lightbulb"></i> توصيات الدرجات
+                </h2>
+                <div id="gradeRecommendationsContainer">
+                    <div class="loading-placeholder">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>جارٍ تحميل التوصيات...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Subjects Management -->
+            <div class="section-card">
+                <h2 class="section-title">
+                    <i class="fas fa-book-open"></i> إدارة المواد والطلاب
+                </h2>
+                
+                <div class="table-responsive">
+                    <table class="table-portal">
+                        <thead>
+                            <tr>
+                                <th class="th-portal">المادة</th>
+                                <th class="th-portal">الصف الدراسي</th>
+                                <th class="th-portal">عدد الطلاب</th>
+                                <th class="th-portal">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subjectsTableBody">
+                            <!-- Subjects will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Students Section -->
+            <div class="section-card">
+                <h2 class="section-title">
+                    <i class="fas fa-users"></i> الطلاب
+                </h2>
+                <div id="teacherStudentsContainer">
+                    <p style="text-align: center; color: #666;">سيتم عرض الطلاب بعد تسجيل الدخول</p>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Grades Modal -->
+    <div id="gradesModal" class="modal">
+        <div class="modal-content" style="max-width: 900px;">
+            <span class="close-modal" onclick="closeModal('gradesModal')">&times;</span>
+            <h2 class="section-title">
+                <i class="fas fa-chart-line"></i> إدارة درجات المادة: <span id="gradesSubjectName"></span>
+            </h2>
+            
+            <!-- Performance Insights and Predictions -->
+            <div class="performance-insights" id="teacherPerformanceInsights" style="margin-bottom: 1.5rem; padding: 1.5rem; background: var(--brand-primary-50); border-radius: 12px; display: none;">
+                <h3 style="margin-bottom: 1rem; color: var(--brand-primary-800);"><i class="fas fa-lightbulb"></i> رؤى الأداء والتنبؤات</h3>
+                <div class="insights-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                    <div class="insight-card" style="background: white; padding: 1rem; border-radius: 8px; text-align: center;">
+                        <div class="insight-title" style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">المعدل العام</div>
+                        <div class="insight-value" id="teacherStudentAvgGrade" style="font-size: 1.5rem; font-weight: 700; color: var(--brand-primary-600);">-</div>
+                    </div>
+                    <div class="insight-card" style="background: white; padding: 1rem; border-radius: 8px; text-align: center;">
+                        <div class="insight-title" style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">التنبؤ بالأداء</div>
+                        <div class="insight-value" id="teacherStudentPerformancePrediction" style="font-size: 1.5rem; font-weight: 700; color: var(--brand-primary-600);">-</div>
+                    </div>
+                    <div class="insight-card" style="background: white; padding: 1rem; border-radius: 8px; text-align: center;">
+                        <div class="insight-title" style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">توقع النجاح/الرسوب</div>
+                        <div class="insight-value" id="teacherPassFailPrediction" style="font-size: 1.5rem; font-weight: 700;">-</div>
+                    </div>
+                </div>
+                
+                <!-- Pass/Fail Prediction Details -->
+                <div id="teacherPredictionDetailsBox" style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; border-right: 4px solid #6c757d; display: none;">
+                    <div id="teacherPredictionMessage" style="font-weight: 500; margin-bottom: 0.5rem;"></div>
+                    <div id="teacherPredictionConfidence" style="font-size: 0.9rem; color: #6c757d;"></div>
+                </div>
+
+                <!-- Forecasted Grades Section -->
+                <div id="teacherForecastSection" style="margin-top: 1.5rem; display: none;">
+                    <h4 style="margin-bottom: 1rem; color: var(--brand-primary-700);"><i class="fas fa-chart-line"></i> الدرجات المتوقعة للفترات القادمة</h4>
+                    <div id="teacherForecastContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;"></div>
+                </div>
+                
+                <!-- Academic Recommendations -->
+                <div id="teacherRecommendationsBox" style="margin-top: 1.5rem; padding: 1rem; background: white; border-radius: 8px; border-right: 4px solid var(--brand-primary-500);">
+                    <h4 style="margin-bottom: 0.5rem; color: var(--brand-primary-700);"><i class="fas fa-graduation-cap"></i> الإرشاد الأكاديمي</h4>
+                    <div id="teacherStudentRecommendations" style="line-height: 1.6;">-</div>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table-portal">
+                    <thead>
+                        <tr>
+                            <th class="th-portal">اسم الطالب</th>
+                            <th class="th-portal">شهر أول</th>
+                            <th class="th-portal">شهر ثاني</th>
+                            <th class="th-portal">نصف السنة</th>
+                            <th class="th-portal">شهر ثالث</th>
+                            <th class="th-portal">شهر رابع</th>
+                            <th class="th-portal">النهائي</th>
+                            <th class="th-portal">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="gradesTableBody">
+                        <!-- Grades will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <button class="btn-primary-portal btn-mt-4" onclick="saveAllGrades()">
+                <i class="fas fa-save"></i> حفظ جميع الدرجات
+            </button>
+        </div>
+    </div>
+    
+    <!-- Attendance Modal -->
+    <div id="attendanceModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <span class="close-modal" onclick="closeModal('attendanceModal')">&times;</span>
+            <h2 class="section-title">
+                <i class="fas fa-calendar-check"></i> سجل الحضور - <span id="attendanceSubjectName"></span>
+            </h2>
+            
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label class="form-label">اختر التاريخ:</label>
+                <input type="date" id="attendanceDate" class="form-input" style="max-width: 200px;">
+                <button class="btn-primary-portal btn-mr-4" onclick="addAttendanceDay()">
+                    <i class="fas fa-plus"></i> إضافة يوم
+                </button>
+            </div>
+            
+            <div id="attendanceRecords">
+                <!-- Attendance records will be loaded here -->
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="assets/js/teacher.js"></script>
+    <script src="assets/js/teacher-portal-enhanced.js"></script>
+</body>
+</html>
